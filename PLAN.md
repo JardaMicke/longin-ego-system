@@ -6,3 +6,4 @@
 - [x] Krok 4: Přidat ego/soul.md a boot proces identity
 - [x] Krok 5: Doplnit integrační a safety testy
 - [x] Krok 6: Doplnit docstringy u tříd podle standardu
+- [x] Krok 7: Uklidit mypy override pro LangGraph
