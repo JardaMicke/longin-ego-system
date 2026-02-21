@@ -40,7 +40,6 @@ exclude = "tests"
 
 [[tool.mypy.overrides]]
 module = [
-    "langgraph",
     "langgraph.graph",
     "langgraph.checkpoint.postgres",
 ]

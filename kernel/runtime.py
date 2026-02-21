@@ -13,6 +13,12 @@ from kernel.chronos.heartbeat import ChronosConfig, ChronosHeartbeat
 from kernel.embeddings.simple_embedder import SimpleEmbedder
 from kernel.network.discovery import DiscoveryConfig, DiscoveryService
 from kernel.network.registry import NetworkRegistry
+from kernel.orchestration.ertdsd_graph import (
+    ERTDSDConfig,
+    ERTDSDOrchestrator,
+    ERTDSDSentinel,
+    ERTDSDSentinelConfig,
+)
 from kernel.security.identity_boot import IdentityBootConfig, IdentityBootLoader
 from kernel.security.identity_firewall import IdentityConfig, IdentityFirewall
 from memory.postgres.client import PostgresClient, PostgresConfig
@@ -23,7 +29,7 @@ from workers._sentinels.memory_consolidate_sentinel import (
     MemoryConsolidateSentinel,
 )
 from workers._sentinels.memory_pipeline_sentinel import MemoryPipelineConfig, MemoryPipelineSentinel
-from workers._sentinels.registry import SentinelRegistry
+from workers._sentinels.registry import Sentinel, SentinelRegistry
 
 
 @dataclass(frozen=True)
@@ -43,6 +49,9 @@ class KernelRuntimeConfig:
     discovery_port: int = 8765
     discovery_service_name: str = "longin-ego"
     node_id: Optional[str] = None
+    enable_ertdsd: bool = True
+    ertdsd_topic: str = "SYS:ERTDSD"
+    ertdsd_checkpoint_dsn: Optional[str] = None
 
 
 class KernelRuntime:
@@ -143,7 +152,18 @@ class KernelRuntime:
         arbiter = Arbiter(ArbiterPolicy())
         chronos_sentinel = ChronosSentinel(ChronosSentinelConfig(), self._bus, arbiter)
         memory_consolidate = MemoryConsolidateSentinel(MemoryConsolidateConfig(), self._bus)
-        for sentinel in (chronos_sentinel, memory_consolidate):
+        sentinels: list[Sentinel] = [chronos_sentinel, memory_consolidate]
+        if self._config.enable_ertdsd:
+            ertdsd_orchestrator = ERTDSDOrchestrator(ERTDSDConfig(), self._bus)
+            ertdsd_sentinel = ERTDSDSentinel(
+                ERTDSDSentinelConfig(
+                    topic=self._config.ertdsd_topic,
+                    checkpoint_dsn=self._config.ertdsd_checkpoint_dsn,
+                ),
+                ertdsd_orchestrator,
+            )
+            sentinels.append(ertdsd_sentinel)
+        for sentinel in sentinels:
             try:
                 self._registry.register(sentinel)
             except Exception:

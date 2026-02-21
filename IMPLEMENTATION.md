@@ -70,6 +70,17 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - SDK základní datové typy a zadání úloh jsou v [base.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/sdk/longin_sdk/core/base.py).
 - Bezpečný filesystem a paměťový klient SDK jsou v [fs.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/sdk/longin_sdk/tools/fs.py#L1-L31) a [memory.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/sdk/longin_sdk/tools/memory.py#L1-L66).
 
+### 2.11 Orchestrace ERTDSD (LangGraph)
+
+- LangGraph workflow a ERTDSD orchestrátor jsou v [ertdsd_graph.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/orchestration/ertdsd_graph.py#L1-L157).
+- Registrace ERTDSD sentinelů probíhá v [runtime.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/runtime.py#L151-L169).
+
+### 2.12 Cortex UI (Next.js + Puck)
+
+- UI aplikace a Puck editor jsou v [page.jsx](file:///f:/L.O.N.G.I.N.%20EGO%20System/cortex/app/page.jsx#L1-L63).
+- REST API pro layout persistence je v [route.js](file:///f:/L.O.N.G.I.N.%20EGO%20System/cortex/app/api/puck/route.js#L1-L38).
+- Datový layer pro verzované layouty je v [db.js](file:///f:/L.O.N.G.I.N.%20EGO%20System/cortex/lib/db.js#L1-L76).
+
 ## 3. Stav implementace vůči návrhu
 
 ### 3.1 Implementováno
@@ -79,21 +90,20 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Bipolární paměťové schéma a základní persistence.
 - Identity Firewall, boot identity a Airlock validace.
 - Ganglion uzly, discovery, MCP nástroje a klient.
+- Docker Compose infrastruktura včetně kernel/cortex služeb.
+- LangGraph orchestrátor ERTDSD a sentinel registrace.
+- Cortex UI (Next.js + Puck) s perzistencí layoutů.
 - Integrační a safety testy pro boot identity a SiblingRunner.
 - Docstringy tříd dle standardu.
 - Deník: [Page-1](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-1.md).
 - Deník: [Page-2](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-2.md).
+- Deník: [Page-3](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-3.md).
 
 ### 3.2 Chybějící části dle specifikace
 
-- Docker Compose infrastruktura (Redis + Postgres + sítě) není v repozitáři.
-- LangGraph orchestrátor není implementován.
-- Frontend vrstva (Cortex UI, Puck/Next.js) není implementována.
 - Mobilní Synapse klient a vzdálené ovládací rozhraní nejsou součástí tohoto repo.
 
 ## 4. Doporučené navázání
 
-- Přidat docker-compose.yml se službami Redis/Postgres a konfigurací sítě.
-- Implementovat LangGraph orchestrátor a napojit ho na Inbox a Memory Router.
-- Vytvořit Cortex UI (Next.js + Puck) s napojením na UI layout persistence.
 - Rozšířit identity boot o validační pravidla a auditní log.
+- Zvážit mobilní Synapse klient a vzdálené ovládací rozhraní.

@@ -130,3 +130,28 @@ class ERTDSDOrchestrator:
             return PostgresSaver.from_conn_string(dsn)
         except Exception as exc:
             raise RuntimeError(f"PostgresSaver initialization failed: {exc}") from exc
+
+
+@dataclass(frozen=True)
+class ERTDSDSentinelConfig:
+    topic: str = "SYS:ERTDSD"
+    checkpoint_dsn: Optional[str] = None
+
+
+class ERTDSDSentinel:
+    name = "ertdsd_orchestrator"
+
+    def __init__(self, config: ERTDSDSentinelConfig, orchestrator: ERTDSDOrchestrator) -> None:
+        self._config = config
+        self._orchestrator = orchestrator
+
+    def sentinel_scan(self, headers: Dict[str, Any]) -> bool:
+        return headers.get("topic") == self._config.topic
+
+    def handle(self, headers: Dict[str, Any], payload: Dict[str, Any]) -> None:
+        try:
+            if self._config.checkpoint_dsn is not None:
+                self._orchestrator.build(checkpoint_dsn=self._config.checkpoint_dsn)
+            self._orchestrator.invoke({"headers": headers, "payload": payload})
+        except Exception as exc:
+            raise RuntimeError(f"ERTDSD sentinel failed: {exc}") from exc

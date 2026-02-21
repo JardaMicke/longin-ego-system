@@ -3,7 +3,12 @@ from __future__ import annotations
 import json
 from typing import Any, Dict, Mapping
 
-from kernel.orchestration.ertdsd_graph import ERTDSDConfig, ERTDSDOrchestrator
+from kernel.orchestration.ertdsd_graph import (
+    ERTDSDConfig,
+    ERTDSDOrchestrator,
+    ERTDSDSentinel,
+    ERTDSDSentinelConfig,
+)
 
 
 class FakeBus:
@@ -105,3 +110,27 @@ def test_ertdsd_orchestrator_uses_checkpointer_factory() -> None:
     orchestrator.build(checkpoint_dsn="postgresql://test")
 
     assert checkpoint_calls == ["postgresql://test"]
+
+
+def test_ertdsd_sentinel_invokes_orchestrator() -> None:
+    bus = FakeBus()
+    end_state = "__end__"
+    config = ERTDSDConfig()
+
+    def graph_factory() -> FakeGraph:
+        return FakeGraph(end_state)
+
+    orchestrator = ERTDSDOrchestrator(
+        config,
+        bus,
+        graph_factory=graph_factory,
+        end_state=end_state,
+    )
+    sentinel = ERTDSDSentinel(ERTDSDSentinelConfig(topic="SYS:ERTDSD"), orchestrator)
+
+    headers = {"topic": "SYS:ERTDSD"}
+    payload = {"task": "demo"}
+
+    assert sentinel.sentinel_scan(headers) is True
+    sentinel.handle(headers, payload)
+    assert len(bus.published) == 5
