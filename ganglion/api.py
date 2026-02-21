@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from typing import Dict
+from datetime import datetime, timezone
+import os
+from typing import Dict, Optional
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from ganglion.execution import LocalExecutor, SandboxExecutor
 from ganglion.hardware import read_hardware_profile
+from memory.postgres.client import PostgresClient, PostgresConfig
 
 app = FastAPI()
 
@@ -32,6 +35,38 @@ class SpawnResponse(BaseModel):
     output: str
 
 
+class AuditEntry(BaseModel):
+    """Účel: Auditní záznam identity.
+
+    Vstupy/Výstupy: event, version, soul_hash, directives, created_at.
+    Vedlejší efekty: Žádné.
+    """
+    event: str
+    version: str
+    soul_hash: str
+    directives: Dict[str, object]
+    created_at: str
+
+
+class AuditPruneRequest(BaseModel):
+    """Účel: Request schema pro prořezávání audit logu.
+
+    Vstupy/Výstupy: older_than_days, keep_latest.
+    Vedlejší efekty: Žádné.
+    """
+    older_than_days: Optional[int] = None
+    keep_latest: Optional[int] = None
+
+
+class AuditPruneResponse(BaseModel):
+    """Účel: Response schema pro prořezávání audit logu.
+
+    Vstupy/Výstupy: deleted.
+    Vedlejší efekty: Žádné.
+    """
+    deleted: int
+
+
 def capabilities() -> Dict[str, object]:
     try:
         return read_hardware_profile()
@@ -52,5 +87,68 @@ def spawn(request: SpawnRequest) -> SpawnResponse:
         raise HTTPException(status_code=500, detail=f"Spawn failed: {exc}") from exc
 
 
+def telemetry() -> Dict[str, object]:
+    try:
+        payload = read_hardware_profile()
+        payload["timestamp"] = datetime.now(timezone.utc).isoformat()
+        return payload
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Telemetry failed: {exc}") from exc
+
+
+def _load_postgres_dsn() -> str:
+    dsn = os.getenv("POSTGRES_DSN") or os.getenv("DATABASE_URL")
+    if not dsn:
+        raise RuntimeError("POSTGRES_DSN is not configured")
+    return dsn
+
+
+def _get_postgres_client() -> PostgresClient:
+    try:
+        dsn = _load_postgres_dsn()
+        return PostgresClient(PostgresConfig(dsn=dsn))
+    except Exception as exc:
+        raise RuntimeError(f"Postgres config failed: {exc}") from exc
+
+
+def identity_audit(
+    event: Optional[str] = None,
+    version: Optional[str] = None,
+    limit: int = 50,
+) -> Dict[str, object]:
+    try:
+        client = _get_postgres_client()
+        rows = client.search_identity_audit(event=event, version=version, limit=limit)
+        return {
+            "items": [
+                AuditEntry(
+                    event=row[0],
+                    version=row[1],
+                    soul_hash=row[2],
+                    directives=dict(row[3]),
+                    created_at=str(row[4]),
+                ).model_dump()
+                for row in rows
+            ]
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Identity audit read failed: {exc}") from exc
+
+
+def identity_audit_prune(request: AuditPruneRequest) -> AuditPruneResponse:
+    try:
+        client = _get_postgres_client()
+        deleted = client.prune_identity_audit(
+            older_than_days=request.older_than_days,
+            keep_latest=request.keep_latest,
+        )
+        return AuditPruneResponse(deleted=deleted)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Identity audit prune failed: {exc}") from exc
+
+
 app.get("/v1/capabilities")(capabilities)
 app.post("/v1/spawn")(spawn)
+app.get("/v1/telemetry")(telemetry)
+app.get("/v1/identity-audit")(identity_audit)
+app.post("/v1/identity-audit/prune")(identity_audit_prune)

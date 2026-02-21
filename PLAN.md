@@ -10,7 +10,7 @@
 - [x] Krok 8: Založit remote repozitář a pushnout kód
 - [x] Krok 9: Přidat validaci identity boot a auditní log
 - [x] Krok 10: Zavést retenční a vyhledávací politiku audit logu
-- [ ] Krok 11: Přidat API pro auditní log a systémovou telemetrii
+- [x] Krok 11: Přidat API pro auditní log a systémovou telemetrii
 - [ ] Krok 12: Přidat správu secrets a konfigurační profilování pro prostředí
 - [ ] Krok 13: Přidat DB migrace a seedovací data pro test/produkci
 - [ ] Krok 14: Přidat servisní metriky, logování a healthchecks
