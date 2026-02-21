@@ -9,7 +9,7 @@
 - [x] Krok 7: Uklidit mypy override pro LangGraph
 - [x] Krok 8: Založit remote repozitář a pushnout kód
 - [x] Krok 9: Přidat validaci identity boot a auditní log
-- [ ] Krok 10: Zavést retenční a vyhledávací politiku audit logu
+- [x] Krok 10: Zavést retenční a vyhledávací politiku audit logu
 - [ ] Krok 11: Přidat API pro auditní log a systémovou telemetrii
 - [ ] Krok 12: Přidat správu secrets a konfigurační profilování pro prostředí
 - [ ] Krok 13: Přidat DB migrace a seedovací data pro test/produkci

@@ -57,3 +57,6 @@ CREATE TABLE IF NOT EXISTS ui_layouts (
 CREATE INDEX IF NOT EXISTS idx_memories_embedding ON memories USING ivfflat (embedding vector_cosine_ops);
 CREATE INDEX IF NOT EXISTS idx_memories_user_id ON memories (user_id);
 CREATE INDEX IF NOT EXISTS idx_ui_layouts_project_active ON ui_layouts (project_id, is_active);
+CREATE INDEX IF NOT EXISTS idx_identity_audit_event ON identity_audit (event);
+CREATE INDEX IF NOT EXISTS idx_identity_audit_version ON identity_audit (version);
+CREATE INDEX IF NOT EXISTS idx_identity_audit_created_at ON identity_audit (created_at);

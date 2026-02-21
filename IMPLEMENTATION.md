@@ -96,6 +96,7 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Integrační a safety testy pro boot identity a SiblingRunner.
 - Docstringy tříd dle standardu.
 - Identity boot validace a auditní log v Postgres.
+- Retenční a vyhledávací politika audit logu.
 - Deník: [Page-1](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-1.md).
 - Deník: [Page-2](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-2.md).
 - Deník: [Page-3](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-3.md).
@@ -104,6 +105,7 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Deník: [Page-6](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-6.md).
 - Deník: [Page-7](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-7.md).
 - Deník: [Page-8](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-8.md).
+- Deník: [Page-9](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-9.md).
   
 ### 3.2 Chybějící části dle specifikace
 
@@ -111,5 +113,5 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 
 ## 4. Doporučené navázání
 
-- Rozšířit auditní log identity o retenční a vyhledávací politiku.
+- Přidat API pro auditní log a systémovou telemetrii.
 - Zvážit mobilní Synapse klient a vzdálené ovládací rozhraní.

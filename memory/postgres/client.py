@@ -96,6 +96,67 @@ class PostgresClient:
         except Exception as exc:
             raise RuntimeError(f"Insert identity audit failed: {exc}") from exc
 
+    def search_identity_audit(
+        self,
+        event: str | None = None,
+        version: str | None = None,
+        limit: int = 50,
+    ) -> List[Tuple[str, str, str, Mapping[str, Any], Any]]:
+        try:
+            with self._connect() as conn:
+                with conn.cursor() as cur:
+                    clauses = []
+                    params: List[Any] = []
+                    if event:
+                        clauses.append("event = %s")
+                        params.append(event)
+                    if version:
+                        clauses.append("version = %s")
+                        params.append(version)
+                    where = f"WHERE {' AND '.join(clauses)} " if clauses else ""
+                    cur.execute(
+                        "SELECT event, version, soul_hash, directives, created_at "
+                        f"FROM identity_audit {where}ORDER BY created_at DESC LIMIT %s",
+                        tuple(params + [limit]),
+                    )
+                    return [
+                        (row[0], row[1], row[2], cast(Mapping[str, Any], row[3]), row[4])
+                        for row in cur.fetchall()
+                    ]
+        except Exception as exc:
+            raise RuntimeError(f"Identity audit search failed: {exc}") from exc
+
+    def prune_identity_audit(
+        self,
+        older_than_days: int | None = None,
+        keep_latest: int | None = None,
+    ) -> int:
+        if older_than_days is None and keep_latest is None:
+            raise RuntimeError("Identity audit prune policy missing")
+        deleted = 0
+        try:
+            with self._connect() as conn:
+                with conn.cursor() as cur:
+                    if older_than_days is not None:
+                        cur.execute(
+                            "DELETE FROM identity_audit "
+                            "WHERE created_at < NOW() - (%s || ' days')::interval",
+                            (int(older_than_days),),
+                        )
+                        deleted += int(getattr(cur, "rowcount", 0) or 0)
+                    if keep_latest is not None:
+                        cur.execute(
+                            "DELETE FROM identity_audit "
+                            "WHERE id IN (SELECT id FROM identity_audit "
+                            "ORDER BY created_at DESC OFFSET %s)",
+                            (int(keep_latest),),
+                        )
+                        deleted += int(getattr(cur, "rowcount", 0) or 0)
+                conn.commit()
+            return deleted
+        except Exception as exc:
+            raise RuntimeError(f"Identity audit prune failed: {exc}") from exc
+
     def insert_episodic(self, source: str, payload: Mapping[str, Any], importance: float) -> None:
         try:
             import uuid
