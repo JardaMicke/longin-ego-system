@@ -103,6 +103,7 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Deník: [Page-5](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-5.md).
 - Deník: [Page-6](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-6.md).
 - Deník: [Page-7](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-7.md).
+- Deník: [Page-8](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-8.md).
   
 ### 3.2 Chybějící části dle specifikace
 
