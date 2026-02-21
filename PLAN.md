@@ -5,4 +5,4 @@
 - [ ] Krok 3: Vytvořit Cortex UI (Next.js + Puck) včetně persistence
 - [x] Krok 4: Přidat ego/soul.md a boot proces identity
 - [x] Krok 5: Doplnit integrační a safety testy
-- [ ] Krok 6: Doplnit docstringy u tříd podle standardu
+- [x] Krok 6: Doplnit docstringy u tříd podle standardu

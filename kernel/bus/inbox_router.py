@@ -12,6 +12,11 @@ from workers._sentinels.registry import SentinelRegistry
 
 @dataclass(frozen=True)
 class InboxRouterConfig:
+    """Účel: Konfigurace parametrů pro čtení inbox streamu.
+
+    Vstupy/Výstupy: Stream, batch size a pravidla pro flush identity.
+    Vedlejší efekty: Žádné.
+    """
     stream: str = "SYS:INBOX"
     start_id: str = "0-0"
     batch_size: int = 10
@@ -20,6 +25,11 @@ class InboxRouterConfig:
 
 
 class InboxRouter:
+    """Účel: Zpracovává inbox stream a deleguje na sentinely.
+
+    Vstupy/Výstupy: Přijímá config, RedisBus a registry, vrací seznam triggerů.
+    Vedlejší efekty: Čte/publikuje Redis streamy a vyvolává identity firewall.
+    """
     def __init__(
         self,
         config: InboxRouterConfig,

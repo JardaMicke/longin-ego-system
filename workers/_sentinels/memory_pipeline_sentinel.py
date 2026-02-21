@@ -10,6 +10,11 @@ from memory.redis.client import RedisClient
 
 @dataclass(frozen=True)
 class MemoryPipelineConfig:
+    """Účel: Konfigurace pipeline pro konsolidaci paměti.
+
+    Vstupy/Výstupy: Topic, streamy a parametry batch/importance.
+    Vedlejší efekty: Žádné.
+    """
     topic: str = "SYS:MEMORY:CONSOLIDATE"
     hot_stream: str = "SYS:MEMORY:HOT"
     batch_size: int = 50
@@ -18,6 +23,11 @@ class MemoryPipelineConfig:
 
 
 class MemoryPipelineSentinel:
+    """Účel: Převádí hot memory na semantic a episodic záznamy.
+
+    Vstupy/Výstupy: Přijímá headers/payload a zapisuje do Postgresu.
+    Vedlejší efekty: Čte Redis stream a zapisuje do Postgres.
+    """
     name = "memory_pipeline"
 
     def __init__(

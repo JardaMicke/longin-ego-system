@@ -10,6 +10,11 @@ from longin_sdk.core.exceptions import PermissionError
 
 
 class SafeHttpClient:
+    """Účel: Bezpečný HTTP klient s blokací privátních sítí.
+
+    Vstupy/Výstupy: Přijímá URL a volitelné headers, vrací text odpovědi.
+    Vedlejší efekty: Síťové volání přes HTTPX.
+    """
     def __init__(self, timeout_seconds: float = 10.0) -> None:
         self._timeout = timeout_seconds
 

@@ -12,12 +12,22 @@ app = FastAPI()
 
 
 class SpawnRequest(BaseModel):
+    """Účel: Request schema pro spawn endpoint.
+
+    Vstupy/Výstupy: command, sandbox_mode a env_vars.
+    Vedlejší efekty: Žádné.
+    """
     command: str = Field(min_length=1)
     sandbox_mode: bool = True
     env_vars: Dict[str, str] = Field(default_factory=dict)
 
 
 class SpawnResponse(BaseModel):
+    """Účel: Response schema pro spawn endpoint.
+
+    Vstupy/Výstupy: exit_code a output jako odpověď.
+    Vedlejší efekty: Žádné.
+    """
     exit_code: int
     output: str
 

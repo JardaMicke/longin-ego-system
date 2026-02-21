@@ -7,6 +7,11 @@ from typing import List
 
 @dataclass
 class SimpleEmbedder:
+    """Účel: Generuje deterministické embeddingy z textu.
+
+    Vstupy/Výstupy: Vstupem je text, výstupem seznam float dimenzí.
+    Vedlejší efekty: Žádné.
+    """
     dimensions: int = 1536
 
     def embed(self, text: str) -> List[float]:

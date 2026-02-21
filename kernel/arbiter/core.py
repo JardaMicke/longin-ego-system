@@ -7,6 +7,11 @@ import importlib
 
 @dataclass(frozen=True)
 class ResourceSnapshot:
+    """Účel: Reprezentuje aktuální stav systémových zdrojů.
+
+    Vstupy/Výstupy: available_gb, total_gb, gpu_temp_c uložené jako atributy instance.
+    Vedlejší efekty: Žádné.
+    """
     available_gb: float
     total_gb: float
     gpu_temp_c: Optional[float]
@@ -14,11 +19,21 @@ class ResourceSnapshot:
 
 @dataclass(frozen=True)
 class ArbiterPolicy:
+    """Účel: Konfigurace minimálních bezpečnostních limitů zdrojů.
+
+    Vstupy/Výstupy: min_free_gb a max_gpu_temp_c jako konfigurační hodnoty.
+    Vedlejší efekty: Žádné.
+    """
     min_free_gb: float = 4.0
     max_gpu_temp_c: float = 80.0
 
 
 class Arbiter:
+    """Účel: Ověřuje, zda systémové zdroje splňují bezpečnostní limity.
+
+    Vstupy/Výstupy: Vstupem je ArbiterPolicy, výstupem snapshoty a boolean kontrola zdrojů.
+    Vedlejší efekty: Čte systémové metriky přes psutil a volitelně NVML.
+    """
     def __init__(self, policy: ArbiterPolicy) -> None:
         self._policy = policy
 

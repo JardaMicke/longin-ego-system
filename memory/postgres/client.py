@@ -6,10 +6,20 @@ from typing import Any, Iterable, List, Mapping, Tuple, cast
 
 @dataclass(frozen=True)
 class PostgresConfig:
+    """Účel: Konfigurace připojení k Postgresu.
+
+    Vstupy/Výstupy: DSN připojení k databázi.
+    Vedlejší efekty: Žádné.
+    """
     dsn: str
 
 
 class PostgresClient:
+    """Účel: Poskytuje perzistenci a dotazy nad Postgres databází.
+
+    Vstupy/Výstupy: Přijímá config, ukládá a čte data, vrací výsledky dotazů.
+    Vedlejší efekty: Připojuje se k databázi a provádí SQL operace.
+    """
     def __init__(self, config: PostgresConfig) -> None:
         self._config = config
 

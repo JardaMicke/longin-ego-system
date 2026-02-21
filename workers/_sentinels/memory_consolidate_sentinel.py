@@ -9,11 +9,21 @@ from kernel.bus.redis_bus import RedisBus
 
 @dataclass(frozen=True)
 class MemoryConsolidateConfig:
+    """Účel: Konfigurace pro memory consolidate sentinel.
+
+    Vstupy/Výstupy: Topic a cílový stream.
+    Vedlejší efekty: Žádné.
+    """
     topic: str = "MEM:CONSOLIDATE"
     target_stream: str = "SYS:MEMORY:CONSOLIDATE"
 
 
 class MemoryConsolidateSentinel:
+    """Účel: Přesměrovává consolidaci do memory streamu.
+
+    Vstupy/Výstupy: Přijímá headers/payload a publikuje do Redis streamu.
+    Vedlejší efekty: Publikuje do Redis.
+    """
     name = "memory_consolidate"
 
     def __init__(self, config: MemoryConsolidateConfig, bus: RedisBus) -> None:

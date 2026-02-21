@@ -6,12 +6,22 @@ from typing import Any, Dict, Optional, cast
 
 @dataclass(frozen=True)
 class ContainerLimits:
+    """Účel: Konfiguruje limity pro kontejnery v sandboxu.
+
+    Vstupy/Výstupy: Limity paměti a CPU pro docker run.
+    Vedlejší efekty: Žádné.
+    """
     mem_limit: str = "512m"
     cpu_quota: int = 50000
     cpu_period: int = 100000
 
 
 class ContainerManager:
+    """Účel: Spravuje Docker kontejnery pro izolovaný běh kódu.
+
+    Vstupy/Výstupy: Přijímá parametry pro kontejnery, vrací ID a výstupy/logy.
+    Vedlejší efekty: Spouští a zastavuje Docker kontejnery přes Docker SDK.
+    """
     def __init__(self) -> None:
         self._client: Any | None = None
 

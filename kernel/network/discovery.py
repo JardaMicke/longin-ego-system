@@ -9,6 +9,11 @@ from kernel.network.registry import NetworkRegistry
 
 @dataclass
 class DiscoveryConfig:
+    """Účel: Konfigurace mDNS discovery a registrace uzlů.
+
+    Vstupy/Výstupy: Typ služby, jméno služby, port, properties a volby advertise/browse.
+    Vedlejší efekty: Žádné.
+    """
     service_type: str = "_longin-ego._tcp.local."
     service_name: str = "longin-ego"
     port: int = 8765
@@ -20,6 +25,11 @@ class DiscoveryConfig:
 
 
 class DiscoveryService:
+    """Účel: Zajišťuje mDNS discovery a správu NetworkRegistry.
+
+    Vstupy/Výstupy: Přijímá konfiguraci a registry, poskytuje start/stop a registry().
+    Vedlejší efekty: Registruje služby přes Zeroconf a poslouchá síťové události.
+    """
     def __init__(self, config: DiscoveryConfig, registry: NetworkRegistry) -> None:
         self._config = config
         self._registry = registry
@@ -83,6 +93,11 @@ class DiscoveryService:
 
 
 class _ServiceListener:
+    """Účel: Naslouchá mDNS událostem a aktualizuje registry uzlů.
+
+    Vstupy/Výstupy: Přijímá registry a service_type, aktualizuje NetworkRegistry.
+    Vedlejší efekty: Čte síťové informace ze Zeroconf a zapisuje do registry.
+    """
     def __init__(self, registry: NetworkRegistry, service_type: str) -> None:
         self._registry = registry
         self._service_type = service_type

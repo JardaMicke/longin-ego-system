@@ -5,6 +5,11 @@ from typing import Any, Dict, List, Protocol
 
 
 class Sentinel(Protocol):
+    """Účel: Protokol pro sentinel implementace.
+
+    Vstupy/Výstupy: Vyžaduje sentinel_scan a handle.
+    Vedlejší efekty: Závisí na implementaci.
+    """
     name: str
 
     def sentinel_scan(self, headers: Dict[str, Any]) -> bool:
@@ -16,11 +21,21 @@ class Sentinel(Protocol):
 
 @dataclass(frozen=True)
 class SentinelRegistration:
+    """Účel: Vazba názvu na instanci sentinelu.
+
+    Vstupy/Výstupy: name a sentinel jako datové atributy.
+    Vedlejší efekty: Žádné.
+    """
     name: str
     sentinel: Sentinel
 
 
 class SentinelRegistry:
+    """Účel: Registr a dispatch sentinelů podle headers.
+
+    Vstupy/Výstupy: Registruje sentinel a vrací seznam triggerovaných.
+    Vedlejší efekty: Volá sentinel.handle().
+    """
     def __init__(self) -> None:
         self._sentinels: Dict[str, Sentinel] = {}
 

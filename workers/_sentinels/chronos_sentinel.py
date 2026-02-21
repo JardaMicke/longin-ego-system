@@ -9,11 +9,21 @@ from kernel.bus.redis_bus import RedisBus
 
 @dataclass(frozen=True)
 class ChronosSentinelConfig:
+    """Účel: Konfigurace pro Chronos sentinel.
+
+    Vstupy/Výstupy: Topic a stream pro alerty.
+    Vedlejší efekty: Žádné.
+    """
     topic: str = "SYS:HEARTBEAT"
     alerts_stream: str = "SYS:ALERTS"
 
 
 class ChronosSentinel:
+    """Účel: Vyhodnocuje heartbeat a publikuje alerty při nedostatku zdrojů.
+
+    Vstupy/Výstupy: Přijímá headers/payload, publikuje alerty do Redis streamu.
+    Vedlejší efekty: Volá Arbiter a RedisBus.
+    """
     name = "chronos_sentinel"
 
     def __init__(self, config: ChronosSentinelConfig, bus: RedisBus, arbiter: Arbiter) -> None:

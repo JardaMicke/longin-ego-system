@@ -11,10 +11,20 @@ from longin_sdk.tools.net import SafeHttpClient
 
 @dataclass(frozen=True)
 class ModuleConfig:
+    """Účel: Konfigurace pro LonginModule.
+
+    Vstupy/Výstupy: workspace_root jako základ pro SafeFileSystem.
+    Vedlejší efekty: Žádné.
+    """
     workspace_root: str
 
 
 class LonginModule(ILonginSentinel):
+    """Účel: Základní modul poskytující SDK nástroje a sentinel rozhraní.
+
+    Vstupy/Výstupy: Přijímá konfiguraci a poskytuje fs/net/memory utility.
+    Vedlejší efekty: Inicializuje klienty SDK.
+    """
     def __init__(self, config: ModuleConfig) -> None:
         self._config = config
         self.fs = SafeFileSystem(config.workspace_root)

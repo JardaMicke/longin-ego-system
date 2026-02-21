@@ -6,6 +6,11 @@ from memory.postgres.client import PostgresClient, PostgresConfig
 
 
 class MemoryClient:
+    """Účel: SDK klient pro ukládání a vyhledávání v paměti.
+
+    Vstupy/Výstupy: Přijímá DSN a embedder, vrací výsledky vyhledávání.
+    Vedlejší efekty: Přistupuje k Postgres databázi.
+    """
     def __init__(self, dsn: Optional[str] = None, embedder: Optional[Callable[[str], Iterable[float]]] = None) -> None:
         self._dsn = dsn
         self._embedder = embedder

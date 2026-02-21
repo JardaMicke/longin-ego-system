@@ -6,6 +6,11 @@ import httpx
 
 
 class GanglionClient:
+    """Účel: HTTP klient pro komunikaci s Ganglion API.
+
+    Vstupy/Výstupy: Přijímá base_url, vrací JSON odpovědi capabilities/spawn.
+    Vedlejší efekty: Síťové požadavky přes HTTPX.
+    """
     def __init__(self, base_url: str, client: Optional[httpx.Client] = None) -> None:
         self._base_url = base_url.rstrip("/")
         self._client = client or httpx.Client(timeout=10.0)

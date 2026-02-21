@@ -11,12 +11,22 @@ from kernel.security.identity_firewall import IdentityFirewall
 
 @dataclass(frozen=True)
 class SupervisorConfig:
+    """Účel: Konfigurace pro routování rozhodnutí do inbox streamu.
+
+    Vstupy/Výstupy: Streamy a interval flush identity.
+    Vedlejší efekty: Žádné.
+    """
     inbox_stream: str = "SYS:INBOX"
     identity_flush_stream: str = "SYS:MEMORY:FLUSH"
     identity_flush_min_interval_seconds: float = 60.0
 
 
 class Supervisor:
+    """Účel: Rozhoduje o směrování payloadu a publikuje do inbox streamu.
+
+    Vstupy/Výstupy: Přijímá headers/payload a vrací message ID.
+    Vedlejší efekty: Publikuje do Redis streamu, volá identity firewall.
+    """
     def __init__(
         self,
         config: SupervisorConfig,

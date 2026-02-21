@@ -11,12 +11,22 @@ from kernel.bus.redis_bus import RedisBus
 
 @dataclass(frozen=True)
 class ChronosConfig:
+    """Účel: Konfigurace heartbeat period a cílů pro publikaci.
+
+    Vstupy/Výstupy: Perioda, Redis key a volitelný stream.
+    Vedlejší efekty: Žádné.
+    """
     period_seconds: float = 15.0
     heartbeat_key: str = "SYS:HEARTBEAT"
     heartbeat_stream: str | None = None
 
 
 class ChronosHeartbeat:
+    """Účel: Spouští cyklický heartbeat a publikuje fáze systému.
+
+    Vstupy/Výstupy: Přijímá konfiguraci, RedisBus a callback, publikuje heartbeat.
+    Vedlejší efekty: Periodické zápisy do Redis a volání callbacku.
+    """
     def __init__(
         self,
         config: ChronosConfig,

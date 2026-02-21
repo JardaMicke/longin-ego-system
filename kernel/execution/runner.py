@@ -11,6 +11,11 @@ from kernel.security.container_manager import ContainerLimits, ContainerManager
 
 @dataclass(frozen=True)
 class RunnerConfig:
+    """Účel: Konfigurace obrazu, příkazu a timeoutů pro SiblingRunner.
+
+    Vstupy/Výstupy: Docker image, command a timeouty jako konfigurační hodnoty.
+    Vedlejší efekty: Žádné.
+    """
     image: str = "python:3.11-alpine"
     command: str = "python /tmp/runner.py"
     soft_timeout_seconds: int = 60
@@ -18,6 +23,11 @@ class RunnerConfig:
 
 
 class SiblingRunner:
+    """Účel: Spouští kód v izolovaném kontejneru po validaci Airlockem.
+
+    Vstupy/Výstupy: Přijímá kód a limity, vrací status code a output.
+    Vedlejší efekty: Vytváří dočasné soubory a spravuje kontejnery.
+    """
     def __init__(
         self,
         airlock: Airlock,

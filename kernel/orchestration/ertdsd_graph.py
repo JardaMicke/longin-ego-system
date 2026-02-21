@@ -9,11 +9,21 @@ from kernel.bus.redis_bus import RedisBus
 
 @dataclass(frozen=True)
 class ERTDSDConfig:
+    """Účel: Definuje parametry a fáze ERTDSD orchestrace.
+
+    Vstupy/Výstupy: Inbox stream a seznam fází pro workflow.
+    Vedlejší efekty: Žádné.
+    """
     inbox_stream: str = "SYS:INBOX"
     stages: Tuple[str, ...] = ("meeting", "spec", "code", "test", "deploy")
 
 
 class ERTDSDOrchestrator:
+    """Účel: Orchestrace ERTDSD workflow přes LangGraph a Redis Streams.
+
+    Vstupy/Výstupy: Přijímá konfiguraci a RedisBus, publikuje stavy a vrací update stavu.
+    Vedlejší efekty: Publikuje do Redis streamu, volitelně používá Postgres checkpointer.
+    """
     def __init__(
         self,
         config: ERTDSDConfig,

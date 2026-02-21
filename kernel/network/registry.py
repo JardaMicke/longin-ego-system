@@ -7,6 +7,11 @@ from typing import Dict, List, Mapping, Optional
 
 @dataclass
 class NetworkNode:
+    """Účel: Ukládá metadata o objeveném uzlu v síti.
+
+    Vstupy/Výstupy: Identifikátor, adresa, port a properties uzlu.
+    Vedlejší efekty: Žádné.
+    """
     node_id: str
     hostname: str
     address: str
@@ -16,6 +21,11 @@ class NetworkNode:
 
 
 class NetworkRegistry:
+    """Účel: Registr uzlů s TTL a základními CRUD operacemi.
+
+    Vstupy/Výstupy: Přijímá TTL, vrací uzly a seznamy uzlů.
+    Vedlejší efekty: Časové purge expirovaných uzlů.
+    """
     def __init__(self, ttl_seconds: float = 120.0) -> None:
         self._ttl_seconds = ttl_seconds
         self._nodes: Dict[str, NetworkNode] = {}

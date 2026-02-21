@@ -8,6 +8,11 @@ from longin_sdk.mcp.server import MCPServer
 
 
 class NexusControlServer:
+    """Účel: MCP server pro discovery Ganglion uzlů a delegaci výpočtu.
+
+    Vstupy/Výstupy: Přijímá NetworkRegistry, vystavuje MCP nástroje.
+    Vedlejší efekty: Spouští MCP server a provádí síťové volání na uzly.
+    """
     def __init__(
         self,
         registry: NetworkRegistry,

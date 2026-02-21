@@ -6,10 +6,20 @@ from typing import Any, List, Mapping, Tuple, cast
 
 @dataclass(frozen=True)
 class RedisBusConfig:
+    """Účel: Konfigurace připojení k Redis busu.
+
+    Vstupy/Výstupy: Redis URL uložené v konfiguraci.
+    Vedlejší efekty: Žádné.
+    """
     url: str
 
 
 class RedisBus:
+    """Účel: Poskytuje publish/read operace nad Redis Streams a klíči.
+
+    Vstupy/Výstupy: Přijímá konfiguraci, publikuje zprávy a vrací jejich ID.
+    Vedlejší efekty: Síťová komunikace s Redis serverem.
+    """
     def __init__(self, config: RedisBusConfig) -> None:
         self._config = config
         self._client: Any | None = None

@@ -8,6 +8,11 @@ from kernel.bus.redis_bus import RedisBus
 
 
 class MemoryPipeline(Protocol):
+    """Účel: Protokol pro memory pipeline sentinel.
+
+    Vstupy/Výstupy: Vyžaduje sentinel_scan a handle nad headers/payload.
+    Vedlejší efekty: Závisí na implementaci.
+    """
     name: str
 
     def sentinel_scan(self, headers: Dict[str, Any]) -> bool:
@@ -19,12 +24,22 @@ class MemoryPipeline(Protocol):
 
 @dataclass(frozen=True)
 class MemoryRouterConfig:
+    """Účel: Konfigurace memory streamu a batch zpracování.
+
+    Vstupy/Výstupy: Stream, start_id a batch_size jako parametry čtení.
+    Vedlejší efekty: Žádné.
+    """
     stream: str = "SYS:MEMORY:CONSOLIDATE"
     start_id: str = "0-0"
     batch_size: int = 10
 
 
 class MemoryRouter:
+    """Účel: Čte memory stream a deleguje payload do pipeline.
+
+    Vstupy/Výstupy: Přijímá config, RedisBus a pipeline, vrací zpracovaná ID.
+    Vedlejší efekty: Čte Redis stream a volá pipeline handler.
+    """
     def __init__(self, config: MemoryRouterConfig, bus: RedisBus, pipeline: MemoryPipeline) -> None:
         self._config = config
         self._bus = bus

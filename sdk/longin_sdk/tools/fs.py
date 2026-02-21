@@ -6,6 +6,11 @@ from longin_sdk.core.exceptions import PermissionError
 
 
 class SafeFileSystem:
+    """Účel: Bezpečné čtení a zápis souborů v rámci workspace.
+
+    Vstupy/Výstupy: Přijímá root workspace, čte a zapisuje obsah souborů.
+    Vedlejší efekty: Operace se souborovým systémem.
+    """
     def __init__(self, workspace_root: str) -> None:
         self._root = Path(workspace_root).resolve()
 

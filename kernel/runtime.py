@@ -28,6 +28,11 @@ from workers._sentinels.registry import SentinelRegistry
 
 @dataclass(frozen=True)
 class KernelRuntimeConfig:
+    """Účel: Konfiguruje běh kernel runtime a přístup k infrastruktuře.
+
+    Vstupy/Výstupy: URL/DSN pro Redis/Postgres, volby discovery a heartbeat period.
+    Vedlejší efekty: Žádné.
+    """
     redis_url: str
     postgres_dsn: str
     redis_memory_url: Optional[str] = None
@@ -41,6 +46,11 @@ class KernelRuntimeConfig:
 
 
 class KernelRuntime:
+    """Účel: Skládá a spouští všechny klíčové subsystémy jádra.
+
+    Vstupy/Výstupy: Přijímá konfiguraci a volitelné závislosti, poskytuje běh smyčky a registry.
+    Vedlejší efekty: Připojuje se k Redis/Postgres, spouští discovery a heartbeat, publikuje zprávy.
+    """
     def __init__(
         self,
         config: KernelRuntimeConfig,

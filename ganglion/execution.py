@@ -10,11 +10,21 @@ from kernel.security.container_manager import ContainerLimits, ContainerManager
 
 @dataclass
 class ExecutionResult:
+    """Účel: Nese výsledek provedení příkazu.
+
+    Vstupy/Výstupy: exit_code a output jako výstupní atributy.
+    Vedlejší efekty: Žádné.
+    """
     exit_code: int
     output: str
 
 
 class SandboxExecutor:
+    """Účel: Spouští příkazy v izolovaném Docker kontejneru.
+
+    Vstupy/Výstupy: Přijímá command a env_vars, vrací ExecutionResult.
+    Vedlejší efekty: Spouští a ukončuje kontejnery.
+    """
     def __init__(
         self,
         image: str = "python:3.11-alpine",
@@ -47,6 +57,11 @@ class SandboxExecutor:
 
 
 class LocalExecutor:
+    """Účel: Spouští příkazy lokálně přes subprocess.
+
+    Vstupy/Výstupy: Přijímá command a env_vars, vrací ExecutionResult.
+    Vedlejší efekty: Spouští lokální procesy.
+    """
     def __init__(self, timeout_seconds: int = 120) -> None:
         self._timeout_seconds = timeout_seconds
 

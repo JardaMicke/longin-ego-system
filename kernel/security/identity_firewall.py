@@ -9,11 +9,21 @@ from kernel.bus.redis_bus import RedisBus
 
 @dataclass(frozen=True)
 class IdentityConfig:
+    """Účel: Konfigurace cesty k soul souboru a Redis klíče.
+
+    Vstupy/Výstupy: soul_path a redis_key jako konfigurační hodnoty.
+    Vedlejší efekty: Žádné.
+    """
     soul_path: str
     redis_key: str = "SYS:SOUL:CURRENT"
 
 
 class IdentityFirewall:
+    """Účel: Sleduje změny identity a ukládá hash do Redis.
+
+    Vstupy/Výstupy: Přijímá konfiguraci a RedisBus, vrací hash a stav změny.
+    Vedlejší efekty: Čte soubor a zapisuje hash do Redis.
+    """
     def __init__(self, config: IdentityConfig, bus: RedisBus) -> None:
         self._config = config
         self._bus = bus

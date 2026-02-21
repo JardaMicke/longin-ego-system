@@ -11,6 +11,11 @@ from memory.postgres.client import PostgresClient
 
 @dataclass(frozen=True)
 class IdentityBootConfig:
+    """Účel: Konfiguruje načtení identity ze soul souboru.
+
+    Vstupy/Výstupy: Cesta k soul.md a klíče pro Redis.
+    Vedlejší efekty: Žádné.
+    """
     soul_path: str
     redis_hash_key: str = "SYS:SOUL:CURRENT"
     redis_version_key: str = "SYS:SOUL:VERSION"
@@ -18,6 +23,11 @@ class IdentityBootConfig:
 
 
 class IdentityBootLoader:
+    """Účel: Načte identitu ze soul souboru a uloží ji do Redis/Postgres.
+
+    Vstupy/Výstupy: Přijímá RedisBus a PostgresClient, vrací payload direktiv a verze.
+    Vedlejší efekty: Čte soubor a zapisuje do Redis/Postgres.
+    """
     def __init__(self, config: IdentityBootConfig) -> None:
         self._config = config
 

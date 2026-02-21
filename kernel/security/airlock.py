@@ -7,17 +7,32 @@ from typing import Iterable, List, Set
 
 @dataclass(frozen=True)
 class ValidationResult:
+    """Účel: Výsledek validace kódu v Airlocku.
+
+    Vstupy/Výstupy: ok a seznam chyb z validace.
+    Vedlejší efekty: Žádné.
+    """
     ok: bool
     errors: List[str]
 
 
 @dataclass(frozen=True)
 class AirlockPolicy:
+    """Účel: Definuje povolené a blokované moduly.
+
+    Vstupy/Výstupy: allowed_modules a blocked_modules jako pravidla.
+    Vedlejší efekty: Žádné.
+    """
     allowed_modules: Set[str]
     blocked_modules: Set[str]
 
 
 class Airlock:
+    """Účel: Provádí AST validaci kódu proti bezpečnostní politice.
+
+    Vstupy/Výstupy: Přijímá kód, vrací ValidationResult.
+    Vedlejší efekty: Žádné.
+    """
     def __init__(self, policy: AirlockPolicy) -> None:
         self._policy = policy
 

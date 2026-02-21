@@ -4,6 +4,11 @@ from typing import Any, Callable, cast
 
 
 class MCPServer:
+    """Účel: Wrapper nad FastMCP pro registraci nástrojů a běh serveru.
+
+    Vstupy/Výstupy: Vystavuje decorator tool a spouštění serveru.
+    Vedlejší efekty: Spouští MCP server a registruje nástroje.
+    """
     def __init__(self) -> None:
         try:
             from fastmcp import FastMCP
