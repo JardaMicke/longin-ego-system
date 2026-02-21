@@ -72,6 +72,30 @@ class PostgresClient:
         except Exception as exc:
             raise RuntimeError(f"Insert identity failed: {exc}") from exc
 
+    def insert_identity_audit(
+        self,
+        event: str,
+        version: str,
+        soul_hash: str,
+        directives: Mapping[str, Any],
+    ) -> None:
+        try:
+            import uuid
+            import json
+        except Exception as exc:
+            raise RuntimeError(f"Import failed: {exc}") from exc
+        try:
+            with self._connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "INSERT INTO identity_audit (id, event, version, soul_hash, directives) "
+                        "VALUES (%s, %s, %s, %s, %s)",
+                        (str(uuid.uuid4()), event, version, soul_hash, json.dumps(directives)),
+                    )
+                conn.commit()
+        except Exception as exc:
+            raise RuntimeError(f"Insert identity audit failed: {exc}") from exc
+
     def insert_episodic(self, source: str, payload: Mapping[str, Any], importance: float) -> None:
         try:
             import uuid

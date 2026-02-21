@@ -95,18 +95,20 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Cortex UI (Next.js + Puck) s perzistencí layoutů.
 - Integrační a safety testy pro boot identity a SiblingRunner.
 - Docstringy tříd dle standardu.
+- Identity boot validace a auditní log v Postgres.
 - Deník: [Page-1](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-1.md).
 - Deník: [Page-2](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-2.md).
 - Deník: [Page-3](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-3.md).
 - Deník: [Page-4](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-4.md).
 - Deník: [Page-5](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-5.md).
 - Deník: [Page-6](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-6.md).
-
+- Deník: [Page-7](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-7.md).
+  
 ### 3.2 Chybějící části dle specifikace
 
 - Mobilní Synapse klient a vzdálené ovládací rozhraní nejsou součástí tohoto repo.
 
 ## 4. Doporučené navázání
 
-- Rozšířit identity boot o validační pravidla a auditní log.
+- Rozšířit auditní log identity o retenční a vyhledávací politiku.
 - Zvážit mobilní Synapse klient a vzdálené ovládací rozhraní.

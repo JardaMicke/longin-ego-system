@@ -35,6 +35,7 @@ class IdentityBootLoader:
         content = self._read_soul()
         soul_hash = self._hash_content(content)
         version, directives = self._parse_directives(content)
+        self._validate_directives(version, directives)
         payload: Dict[str, object] = dict(directives)
         payload["version"] = version
         try:
@@ -47,6 +48,10 @@ class IdentityBootLoader:
             postgres.insert_identity(version=version, soul_hash=soul_hash, directives=payload)
         except Exception as exc:
             raise RuntimeError(f"Identity boot postgres failed: {exc}") from exc
+        try:
+            postgres.insert_identity_audit(event="boot", version=version, soul_hash=soul_hash, directives=payload)
+        except Exception as exc:
+            raise RuntimeError(f"Identity boot audit failed: {exc}") from exc
         return payload
 
     def _read_soul(self) -> str:
@@ -99,3 +104,10 @@ class IdentityBootLoader:
         if line.startswith(("- ", "* ")):
             return line[2:].strip()
         return line
+
+    def _validate_directives(self, version: str, directives: Dict[str, List[str]]) -> None:
+        missing = [key for key, items in directives.items() if not items]
+        if not version.strip():
+            missing.append("version")
+        if missing:
+            raise RuntimeError(f"Identity boot validation failed: missing {', '.join(missing)}")

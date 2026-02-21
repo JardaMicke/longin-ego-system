@@ -25,6 +25,15 @@ CREATE TABLE IF NOT EXISTS ego_profile (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS identity_audit (
+    id UUID PRIMARY KEY,
+    event TEXT NOT NULL,
+    version TEXT NOT NULL,
+    soul_hash TEXT NOT NULL,
+    directives JSONB NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS memories (
     id UUID PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

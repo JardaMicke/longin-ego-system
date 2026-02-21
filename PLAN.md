@@ -8,3 +8,4 @@
 - [x] Krok 6: Doplnit docstringy u tříd podle standardu
 - [x] Krok 7: Uklidit mypy override pro LangGraph
 - [x] Krok 8: Založit remote repozitář a pushnout kód
+- [x] Krok 9: Přidat validaci identity boot a auditní log

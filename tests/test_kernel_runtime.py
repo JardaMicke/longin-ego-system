@@ -24,6 +24,7 @@ class FakeRedisClient:
 class FakePostgresClient:
     def __init__(self) -> None:
         self.identities = []
+        self.audit = []
 
     def insert_semantic(self, content, tags, embedding) -> None:
         return None
@@ -33,6 +34,9 @@ class FakePostgresClient:
 
     def insert_identity(self, version: str, soul_hash: str, directives) -> None:
         self.identities.append((version, soul_hash, directives))
+
+    def insert_identity_audit(self, event: str, version: str, soul_hash: str, directives) -> None:
+        self.audit.append((event, version, soul_hash, directives))
 
 
 class FakeRouter:
