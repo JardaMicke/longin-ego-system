@@ -1,3 +1,7 @@
+from typing import Any, Sequence
+
+from _pytest.monkeypatch import MonkeyPatch
+
 from memory.postgres.client import PostgresClient, PostgresConfig
 
 
@@ -5,21 +9,21 @@ class FakeCursor:
     def __init__(self, rows: list[tuple] | None = None, rowcounts: list[int] | None = None) -> None:
         self.rows = rows or []
         self.rowcounts = rowcounts or []
-        self.queries = []
-        self.params = []
+        self.queries: list[str] = []
+        self.params: list[tuple[Any, ...] | None] = []
         self._index = 0
         self.rowcount = 0
 
-    def execute(self, query: str, params: tuple | None = None) -> None:
+    def execute(self, query: str, params: Sequence[Any] | None = None) -> None:
         self.queries.append(query)
-        self.params.append(params)
+        self.params.append(tuple(params) if params is not None else None)
         if self._index < len(self.rowcounts):
             self.rowcount = self.rowcounts[self._index]
         else:
             self.rowcount = 0
         self._index += 1
 
-    def fetchall(self) -> list[tuple]:
+    def fetchall(self) -> list[tuple[Any, ...]]:
         return self.rows
 
     def __enter__(self) -> "FakeCursor":
@@ -47,8 +51,8 @@ class FakeConnection:
         return None
 
 
-def test_search_identity_audit_builds_filters(monkeypatch) -> None:
-    rows = [("boot", "v1", "hash", {"who": "core"}, "2026-01-01")]
+def test_search_identity_audit_builds_filters(monkeypatch: MonkeyPatch) -> None:
+    rows: list[tuple[Any, ...]] = [("boot", "v1", "hash", {"who": "core"}, "2026-01-01")]
     cursor = FakeCursor(rows=rows)
     conn = FakeConnection(cursor)
     client = PostgresClient(PostgresConfig(dsn="dsn"))
@@ -59,7 +63,7 @@ def test_search_identity_audit_builds_filters(monkeypatch) -> None:
     assert cursor.params[0] == ("boot", "v1", 10)
 
 
-def test_prune_identity_audit_executes_policy(monkeypatch) -> None:
+def test_prune_identity_audit_executes_policy(monkeypatch: MonkeyPatch) -> None:
     cursor = FakeCursor(rowcounts=[2, 3])
     conn = FakeConnection(cursor)
     client = PostgresClient(PostgresConfig(dsn="dsn"))
@@ -81,7 +85,7 @@ def test_prune_identity_audit_requires_policy() -> None:
     raise AssertionError("Expected RuntimeError")
 
 
-def test_health_check_ok(monkeypatch) -> None:
+def test_health_check_ok(monkeypatch: MonkeyPatch) -> None:
     cursor = FakeCursor()
     conn = FakeConnection(cursor)
     client = PostgresClient(PostgresConfig(dsn="dsn"))
@@ -91,7 +95,7 @@ def test_health_check_ok(monkeypatch) -> None:
     assert error is None
 
 
-def test_health_check_failure(monkeypatch) -> None:
+def test_health_check_failure(monkeypatch: MonkeyPatch) -> None:
     client = PostgresClient(PostgresConfig(dsn="dsn"))
     def raise_connect() -> None:
         raise RuntimeError("boom")
