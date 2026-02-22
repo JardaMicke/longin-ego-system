@@ -79,3 +79,23 @@ def test_prune_identity_audit_requires_policy() -> None:
         assert "Identity audit prune policy missing" in str(exc)
         return
     raise AssertionError("Expected RuntimeError")
+
+
+def test_health_check_ok(monkeypatch) -> None:
+    cursor = FakeCursor()
+    conn = FakeConnection(cursor)
+    client = PostgresClient(PostgresConfig(dsn="dsn"))
+    monkeypatch.setattr(client, "_connect", lambda: conn)
+    ok, error = client.health_check()
+    assert ok is True
+    assert error is None
+
+
+def test_health_check_failure(monkeypatch) -> None:
+    client = PostgresClient(PostgresConfig(dsn="dsn"))
+    def raise_connect():
+        raise RuntimeError("boom")
+    monkeypatch.setattr(client, "_connect", raise_connect)
+    ok, error = client.health_check()
+    assert ok is False
+    assert error is not None

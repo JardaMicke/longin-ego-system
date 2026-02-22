@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Iterable, List, Mapping, Tuple, cast
+from typing import Any, Iterable, List, Mapping, Optional, Tuple, cast
 
 
 @dataclass(frozen=True)
@@ -41,6 +41,15 @@ class PostgresClient:
                 conn.commit()
         except Exception as exc:
             raise RuntimeError(f"Schema execution failed: {exc}") from exc
+
+    def health_check(self) -> Tuple[bool, Optional[str]]:
+        try:
+            with self._connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute("SELECT 1")
+            return True, None
+        except Exception as exc:
+            return False, str(exc)
 
     def vector_search(self, embedding: Iterable[float], limit: int = 5) -> List[Tuple[str, float]]:
         try:

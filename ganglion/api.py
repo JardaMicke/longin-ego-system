@@ -1,15 +1,22 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import time
 from typing import Dict, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from ganglion.execution import LocalExecutor, SandboxExecutor
 from ganglion.hardware import read_hardware_profile
+from ganglion.metrics import MetricsState
 from kernel.config import read_profiled, read_secret
+from kernel.observability import configure_logging, get_logger, uptime_seconds
 from memory.postgres.client import PostgresClient, PostgresConfig
+
+configure_logging(read_profiled("LOG_LEVEL", read_secret("LONGIN_ENV") or "dev") or "INFO")
+logger = get_logger("ganglion.api")
+metrics_state = MetricsState()
 
 app = FastAPI()
 
@@ -96,6 +103,59 @@ def telemetry() -> Dict[str, object]:
         raise HTTPException(status_code=500, detail=f"Telemetry failed: {exc}") from exc
 
 
+def health() -> Dict[str, object]:
+    try:
+        return {"status": "ok", "uptime_seconds": uptime_seconds()}
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Health failed: {exc}") from exc
+
+
+def readiness() -> Dict[str, object]:
+    try:
+        client = _get_postgres_client()
+        ok, error = client.health_check()
+        status = "ok" if ok else "degraded"
+        return {"status": status, "postgres": {"ok": ok, "error": error}}
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Readiness failed: {exc}") from exc
+
+
+def metrics() -> Dict[str, object]:
+    try:
+        payload = metrics_state.snapshot()
+        payload["service_uptime_seconds"] = uptime_seconds()
+        return payload
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Metrics failed: {exc}") from exc
+
+
+@app.middleware("http")
+async def metrics_middleware(request: Request, call_next):
+    start = time.monotonic()
+    path = request.url.path
+    try:
+        response = await call_next(request)
+        duration_ms = (time.monotonic() - start) * 1000.0
+        metrics_state.record_request(path, response.status_code, None)
+        logger.info(
+            "request",
+            extra={
+                "method": request.method,
+                "path": path,
+                "status": response.status_code,
+                "duration_ms": round(duration_ms, 2),
+            },
+        )
+        return response
+    except Exception as exc:
+        duration_ms = (time.monotonic() - start) * 1000.0
+        metrics_state.record_request(path, 500, str(exc))
+        logger.error(
+            f"request_error method={request.method} path={path} duration_ms={round(duration_ms, 2)} error={exc}"
+        )
+        raise
+
+
 def _load_postgres_dsn() -> str:
     profile = read_secret("LONGIN_ENV") or "dev"
     dsn = read_profiled("POSTGRES_DSN", profile) or read_profiled("DATABASE_URL", profile)
@@ -153,3 +213,6 @@ app.post("/v1/spawn")(spawn)
 app.get("/v1/telemetry")(telemetry)
 app.get("/v1/identity-audit")(identity_audit)
 app.post("/v1/identity-audit/prune")(identity_audit_prune)
+app.get("/v1/health")(health)
+app.get("/v1/ready")(readiness)
+app.get("/v1/metrics")(metrics)
