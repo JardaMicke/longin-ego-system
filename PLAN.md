@@ -16,5 +16,5 @@
 - [x] Krok 14: Přidat servisní metriky, logování a healthchecks
 - [x] Krok 15: Přidat staging konfiguraci a smoke testy
 - [x] Krok 16: Přidat CI/CD pipeline pro build, testy a image
-- [ ] Krok 17: Připravit Docker image a release artefakty
+- [x] Krok 17: Připravit Docker image a release artefakty
 - [ ] Krok 18: Nasadit na produkci a ověřit dostupnost

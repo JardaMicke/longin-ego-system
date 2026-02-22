@@ -1,0 +1,14 @@
+{
+  "name": "longin-ego-system",
+  "version": "0.1.0",
+  "images": [
+    "longin-ego/ganglion:latest",
+    "longin-ego/cortex:latest"
+  ],
+  "artifacts": [
+    "docker/Dockerfile.ganglion",
+    "docker/Dockerfile.cortex",
+    "docker-compose.release.yml",
+    "release/RELEASE.md"
+  ]
+}

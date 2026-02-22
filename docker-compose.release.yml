@@ -1,0 +1,60 @@
+services:
+  redis:
+    image: redis:7.2-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - longin-net
+  postgres:
+    image: pgvector/pgvector:pg16.3
+    environment:
+      POSTGRES_USER: longin
+      POSTGRES_PASSWORD: longin
+      POSTGRES_DB: longin_ego
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - longin-net
+  ganglion-api:
+    image: longin-ego/ganglion:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ganglion
+    environment:
+      LONGIN_ENV: prod
+      REDIS_URL: redis://redis:6379/0
+      POSTGRES_DSN: postgresql://longin:longin@postgres:5432/longin_ego
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - longin-net
+  cortex-ui:
+    image: longin-ego/cortex:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.cortex
+    environment:
+      NODE_ENV: production
+      LONGIN_ENV: prod
+      POSTGRES_DSN: postgresql://longin:longin@postgres:5432/longin_ego
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    networks:
+      - longin-net
+
+volumes:
+  redis-data:
+  postgres-data:
+
+networks:
+  longin-net:

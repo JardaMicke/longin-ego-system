@@ -1,0 +1,21 @@
+FROM node:20-alpine AS build
+
+WORKDIR /app/cortex
+
+COPY cortex/package.json /app/cortex/package.json
+RUN npm install
+
+COPY cortex /app/cortex
+RUN npm run build
+
+FROM node:20-alpine
+
+WORKDIR /app/cortex
+
+ENV NODE_ENV=production
+
+COPY --from=build /app/cortex /app/cortex
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]

@@ -1,0 +1,13 @@
+__pycache__/
+.git/
+.github/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+node_modules/
+cortex/.next/
+cortex/node_modules/
+dist/
+build/
+Diary/

@@ -103,6 +103,7 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Servisní metriky, logování a healthchecks.
 - Staging konfigurace a smoke testy.
 - CI/CD pipeline pro build, testy a image.
+- Docker image a release artefakty.
 - Deník: [Page-1](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-1.md).
 - Deník: [Page-2](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-2.md).
 - Deník: [Page-3](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-3.md).
@@ -118,6 +119,7 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Deník: [Page-13](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-13.md).
 - Deník: [Page-14](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-14.md).
 - Deník: [Page-15](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-15.md).
+- Deník: [Page-16](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-16.md).
   
 ### 3.2 Chybějící části dle specifikace
 
@@ -125,5 +127,5 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 
 ## 4. Doporučené navázání
 
-- Připravit Docker image a release artefakty.
+- Nasadit na produkci a ověřit dostupnost.
 - Zvážit mobilní Synapse klient a vzdálené ovládací rozhraní.
