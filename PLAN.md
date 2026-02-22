@@ -15,6 +15,6 @@
 - [x] Krok 13: Přidat DB migrace a seedovací data pro test/produkci
 - [x] Krok 14: Přidat servisní metriky, logování a healthchecks
 - [x] Krok 15: Přidat staging konfiguraci a smoke testy
-- [ ] Krok 16: Přidat CI/CD pipeline pro build, testy a image
+- [x] Krok 16: Přidat CI/CD pipeline pro build, testy a image
 - [ ] Krok 17: Připravit Docker image a release artefakty
 - [ ] Krok 18: Nasadit na produkci a ověřit dostupnost
