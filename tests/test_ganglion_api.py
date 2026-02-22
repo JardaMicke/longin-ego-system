@@ -7,7 +7,7 @@ class FakePostgresClient:
         self._ok = ok
         self._error = error
 
-    def health_check(self):
+    def health_check(self) -> tuple[bool, str | None]:
         return self._ok, self._error
 
 

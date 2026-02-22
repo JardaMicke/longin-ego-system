@@ -1,6 +1,7 @@
 import json
 import os
 import urllib.request
+from typing import Any
 
 import pytest
 
@@ -12,7 +13,7 @@ def _get_base_url() -> str:
     return base_url.rstrip("/")
 
 
-def _request_json(url: str) -> dict:
+def _request_json(url: str) -> dict[str, Any]:
     with urllib.request.urlopen(url, timeout=5) as response:
         payload = response.read().decode("utf-8")
     return json.loads(payload)

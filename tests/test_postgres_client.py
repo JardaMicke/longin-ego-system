@@ -2,7 +2,7 @@ from memory.postgres.client import PostgresClient, PostgresConfig
 
 
 class FakeCursor:
-    def __init__(self, rows=None, rowcounts=None) -> None:
+    def __init__(self, rows: list[tuple] | None = None, rowcounts: list[int] | None = None) -> None:
         self.rows = rows or []
         self.rowcounts = rowcounts or []
         self.queries = []
@@ -10,7 +10,7 @@ class FakeCursor:
         self._index = 0
         self.rowcount = 0
 
-    def execute(self, query, params=None) -> None:
+    def execute(self, query: str, params: tuple | None = None) -> None:
         self.queries.append(query)
         self.params.append(params)
         if self._index < len(self.rowcounts):
@@ -19,10 +19,10 @@ class FakeCursor:
             self.rowcount = 0
         self._index += 1
 
-    def fetchall(self):
+    def fetchall(self) -> list[tuple]:
         return self.rows
 
-    def __enter__(self):
+    def __enter__(self) -> "FakeCursor":
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:
@@ -34,13 +34,13 @@ class FakeConnection:
         self._cursor = cursor
         self.commits = 0
 
-    def cursor(self):
+    def cursor(self) -> FakeCursor:
         return self._cursor
 
     def commit(self) -> None:
         self.commits += 1
 
-    def __enter__(self):
+    def __enter__(self) -> "FakeConnection":
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:
@@ -93,7 +93,7 @@ def test_health_check_ok(monkeypatch) -> None:
 
 def test_health_check_failure(monkeypatch) -> None:
     client = PostgresClient(PostgresConfig(dsn="dsn"))
-    def raise_connect():
+    def raise_connect() -> None:
         raise RuntimeError("boom")
     monkeypatch.setattr(client, "_connect", raise_connect)
     ok, error = client.health_check()
