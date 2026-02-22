@@ -1,0 +1,13 @@
+services:
+  postgres:
+    environment:
+      POSTGRES_DB: longin_ego_staging
+  nexus-kernel:
+    environment:
+      LONGIN_ENV: staging
+      STAGING_REDIS_URL: redis://redis:6379/0
+      STAGING_POSTGRES_DSN: postgresql://longin:longin@postgres:5432/longin_ego_staging
+  cortex-ui:
+    environment:
+      LONGIN_ENV: staging
+      STAGING_POSTGRES_DSN: postgresql://longin:longin@postgres:5432/longin_ego_staging

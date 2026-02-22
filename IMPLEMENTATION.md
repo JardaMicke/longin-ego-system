@@ -101,6 +101,7 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Správa secrets a konfigurační profilování pro prostředí.
 - DB migrace a seedovací data pro test/produkci.
 - Servisní metriky, logování a healthchecks.
+- Staging konfigurace a smoke testy.
 - Deník: [Page-1](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-1.md).
 - Deník: [Page-2](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-2.md).
 - Deník: [Page-3](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-3.md).
@@ -114,6 +115,7 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Deník: [Page-11](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-11.md).
 - Deník: [Page-12](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-12.md).
 - Deník: [Page-13](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-13.md).
+- Deník: [Page-14](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-14.md).
   
 ### 3.2 Chybějící části dle specifikace
 
@@ -121,5 +123,5 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 
 ## 4. Doporučené navázání
 
-- Přidat staging konfiguraci a smoke testy.
+- Přidat CI/CD pipeline pro build, testy a image.
 - Zvážit mobilní Synapse klient a vzdálené ovládací rozhraní.

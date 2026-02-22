@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 import time
-from typing import Dict, Optional
+from typing import Awaitable, Callable, Dict, Optional
 
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
+from starlette.responses import Response
 
 from ganglion.execution import LocalExecutor, SandboxExecutor
 from ganglion.hardware import read_hardware_profile
@@ -130,7 +131,10 @@ def metrics() -> Dict[str, object]:
 
 
 @app.middleware("http")
-async def metrics_middleware(request: Request, call_next):
+async def metrics_middleware(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
     start = time.monotonic()
     path = request.url.path
     try:
