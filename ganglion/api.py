@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-import os
 from typing import Dict, Optional
 
 from fastapi import FastAPI, HTTPException
@@ -9,6 +8,7 @@ from pydantic import BaseModel, Field
 
 from ganglion.execution import LocalExecutor, SandboxExecutor
 from ganglion.hardware import read_hardware_profile
+from kernel.config import read_profiled, read_secret
 from memory.postgres.client import PostgresClient, PostgresConfig
 
 app = FastAPI()
@@ -97,7 +97,8 @@ def telemetry() -> Dict[str, object]:
 
 
 def _load_postgres_dsn() -> str:
-    dsn = os.getenv("POSTGRES_DSN") or os.getenv("DATABASE_URL")
+    profile = read_secret("LONGIN_ENV") or "dev"
+    dsn = read_profiled("POSTGRES_DSN", profile) or read_profiled("DATABASE_URL", profile)
     if not dsn:
         raise RuntimeError("POSTGRES_DSN is not configured")
     return dsn

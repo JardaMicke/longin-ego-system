@@ -1,11 +1,48 @@
 import { randomUUID } from "crypto";
+import { readFileSync } from "fs";
 import { Pool } from "pg";
 
 let pool;
 
+function readSecret(name) {
+  const value = process.env[name];
+  if (value) {
+    return value;
+  }
+  const filePath = process.env[`${name}_FILE`];
+  if (!filePath) {
+    return undefined;
+  }
+  try {
+    const content = readFileSync(filePath, "utf8").trim();
+    return content || undefined;
+  } catch (error) {
+    throw new Error(`Secret file read failed for ${name}: ${error}`);
+  }
+}
+
+function readProfiled(name, profile) {
+  const key = `${profile.toUpperCase()}_${name}`;
+  const value = process.env[key];
+  if (value) {
+    return value;
+  }
+  const filePath = process.env[`${key}_FILE`];
+  if (filePath) {
+    try {
+      const content = readFileSync(filePath, "utf8").trim();
+      return content || undefined;
+    } catch (error) {
+      throw new Error(`Secret file read failed for ${key}: ${error}`);
+    }
+  }
+  return readSecret(name);
+}
+
 function getPool() {
   if (!pool) {
-    const dsn = process.env.POSTGRES_DSN || process.env.DATABASE_URL;
+    const profile = process.env.LONGIN_ENV || "dev";
+    const dsn = readProfiled("POSTGRES_DSN", profile) || readProfiled("DATABASE_URL", profile);
     if (!dsn) {
       throw new Error("POSTGRES_DSN is not configured");
     }

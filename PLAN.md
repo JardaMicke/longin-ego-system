@@ -11,7 +11,7 @@
 - [x] Krok 9: Přidat validaci identity boot a auditní log
 - [x] Krok 10: Zavést retenční a vyhledávací politiku audit logu
 - [x] Krok 11: Přidat API pro auditní log a systémovou telemetrii
-- [ ] Krok 12: Přidat správu secrets a konfigurační profilování pro prostředí
+- [x] Krok 12: Přidat správu secrets a konfigurační profilování pro prostředí
 - [ ] Krok 13: Přidat DB migrace a seedovací data pro test/produkci
 - [ ] Krok 14: Přidat servisní metriky, logování a healthchecks
 - [ ] Krok 15: Přidat staging konfiguraci a smoke testy

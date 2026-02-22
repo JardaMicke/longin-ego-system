@@ -5,6 +5,7 @@ import json
 from dataclasses import dataclass
 from typing import Optional
 
+from kernel.config import read_bool, read_float, read_int, read_profiled, read_secret
 from kernel.arbiter.core import Arbiter, ArbiterPolicy
 from kernel.bus.inbox_router import InboxRouter, InboxRouterConfig
 from kernel.bus.memory_router import MemoryRouter, MemoryRouterConfig
@@ -52,6 +53,42 @@ class KernelRuntimeConfig:
     enable_ertdsd: bool = True
     ertdsd_topic: str = "SYS:ERTDSD"
     ertdsd_checkpoint_dsn: Optional[str] = None
+
+    @staticmethod
+    def from_env(profile: Optional[str] = None) -> "KernelRuntimeConfig":
+        env_profile = profile or read_secret("LONGIN_ENV") or "dev"
+        redis_url = read_profiled("REDIS_URL", env_profile)
+        postgres_dsn = read_profiled("POSTGRES_DSN", env_profile)
+        if not redis_url:
+            raise RuntimeError("REDIS_URL is not configured")
+        if not postgres_dsn:
+            raise RuntimeError("POSTGRES_DSN is not configured")
+        redis_memory_url = read_profiled("REDIS_MEMORY_URL", env_profile)
+        soul_path = read_profiled("SOUL_PATH", env_profile)
+        poll_interval_seconds = read_float(read_profiled("POLL_INTERVAL_SECONDS", env_profile), 1.0)
+        heartbeat_period_seconds = read_float(read_profiled("HEARTBEAT_PERIOD_SECONDS", env_profile), 15.0)
+        enable_discovery = read_bool(read_profiled("ENABLE_DISCOVERY", env_profile), True)
+        discovery_port = read_int(read_profiled("DISCOVERY_PORT", env_profile), 8765)
+        discovery_service_name = read_profiled("DISCOVERY_SERVICE_NAME", env_profile) or "longin-ego"
+        node_id = read_profiled("NODE_ID", env_profile)
+        enable_ertdsd = read_bool(read_profiled("ENABLE_ERTDSD", env_profile), True)
+        ertdsd_topic = read_profiled("ERTDSD_TOPIC", env_profile) or "SYS:ERTDSD"
+        ertdsd_checkpoint_dsn = read_profiled("ERTDSD_CHECKPOINT_DSN", env_profile)
+        return KernelRuntimeConfig(
+            redis_url=redis_url,
+            postgres_dsn=postgres_dsn,
+            redis_memory_url=redis_memory_url,
+            soul_path=soul_path,
+            poll_interval_seconds=poll_interval_seconds,
+            heartbeat_period_seconds=heartbeat_period_seconds,
+            enable_discovery=enable_discovery,
+            discovery_port=discovery_port,
+            discovery_service_name=discovery_service_name,
+            node_id=node_id,
+            enable_ertdsd=enable_ertdsd,
+            ertdsd_topic=ertdsd_topic,
+            ertdsd_checkpoint_dsn=ertdsd_checkpoint_dsn,
+        )
 
 
 class KernelRuntime:
