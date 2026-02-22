@@ -12,7 +12,7 @@
 - [x] Krok 10: Zavést retenční a vyhledávací politiku audit logu
 - [x] Krok 11: Přidat API pro auditní log a systémovou telemetrii
 - [x] Krok 12: Přidat správu secrets a konfigurační profilování pro prostředí
-- [ ] Krok 13: Přidat DB migrace a seedovací data pro test/produkci
+- [x] Krok 13: Přidat DB migrace a seedovací data pro test/produkci
 - [ ] Krok 14: Přidat servisní metriky, logování a healthchecks
 - [ ] Krok 15: Přidat staging konfiguraci a smoke testy
 - [ ] Krok 16: Přidat CI/CD pipeline pro build, testy a image

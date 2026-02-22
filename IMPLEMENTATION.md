@@ -99,6 +99,7 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Retenční a vyhledávací politika audit logu.
 - API pro auditní log a systémovou telemetrii.
 - Správa secrets a konfigurační profilování pro prostředí.
+- DB migrace a seedovací data pro test/produkci.
 - Deník: [Page-1](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-1.md).
 - Deník: [Page-2](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-2.md).
 - Deník: [Page-3](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-3.md).
@@ -110,6 +111,7 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Deník: [Page-9](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-9.md).
 - Deník: [Page-10](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-10.md).
 - Deník: [Page-11](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-11.md).
+- Deník: [Page-12](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-12.md).
   
 ### 3.2 Chybějící části dle specifikace
 
@@ -117,5 +119,5 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 
 ## 4. Doporučené navázání
 
-- Přidat DB migrace a seedovací data pro test/produkci.
+- Přidat servisní metriky, logování a healthchecks.
 - Zvážit mobilní Synapse klient a vzdálené ovládací rozhraní.
