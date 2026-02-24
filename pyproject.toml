@@ -34,13 +34,16 @@ pythonpath = ["sdk", "."]
 requires = ["setuptools>=69.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+packages = { find = { include = ["sdk*", "kernel*", "memory*", "ganglion*", "workers*"], exclude = ["cortex*", "docker*", "release*", "caddy*", "seeds*", "Diary*", "migrations*"] } }
+
 [tool.ruff]
 line-length = 100
 
 [tool.mypy]
 python_version = "3.11"
 strict = true
-exclude = "tests"
+exclude = "tests|build"
 
 [[tool.mypy.overrides]]
 module = [
