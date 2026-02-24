@@ -1,0 +1,8 @@
+longinegosystem.eu {
+    redir https://www.longinegosystem.eu{uri}
+}
+
+www.longinegosystem.eu {
+    reverse_proxy /v1/* ganglion-api:8000
+    reverse_proxy cortex-ui:3000
+}

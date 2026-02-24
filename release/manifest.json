@@ -11,6 +11,7 @@
     "docker-compose.release.yml",
     "release/RELEASE.md",
     "release/PRODUCTION.md",
+    "caddy/Caddyfile",
     "requirements.txt",
     "scripts/deploy_prod.ps1",
     "scripts/check_prod.ps1"

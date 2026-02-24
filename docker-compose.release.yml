@@ -51,10 +51,26 @@ services:
       - postgres
     networks:
       - longin-net
+  caddy:
+    image: caddy:2.9.1
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - cortex-ui
+      - ganglion-api
+    networks:
+      - longin-net
 
 volumes:
   redis-data:
   postgres-data:
+  caddy-data:
+  caddy-config:
 
 networks:
   longin-net:
