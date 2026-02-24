@@ -9,6 +9,10 @@
     "docker/Dockerfile.ganglion",
     "docker/Dockerfile.cortex",
     "docker-compose.release.yml",
-    "release/RELEASE.md"
+    "release/RELEASE.md",
+    "release/PRODUCTION.md",
+    "requirements.txt",
+    "scripts/deploy_prod.ps1",
+    "scripts/check_prod.ps1"
   ]
 }

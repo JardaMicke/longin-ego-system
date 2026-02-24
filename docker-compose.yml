@@ -9,7 +9,7 @@ services:
     networks:
       - longin-net
   postgres:
-    image: pgvector/pgvector:pg16.3
+    image: pgvector/pgvector:pg16
     environment:
       POSTGRES_USER: longin
       POSTGRES_PASSWORD: longin
