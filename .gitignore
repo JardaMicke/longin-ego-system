@@ -6,6 +6,8 @@ node_modules/
 **/__pycache__/
 dist/
 build/
+**/dist/
+**/build/
 coverage/
 .env
 .env.local
