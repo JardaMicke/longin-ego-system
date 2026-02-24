@@ -1,4 +1,16 @@
 import "./globals.css";
+import { Orbitron, Share_Tech_Mono } from "next/font/google";
+
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-orbitron"
+});
+const shareTechMono = Share_Tech_Mono({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-mono"
+});
 
 export const metadata = {
   title: "L.O.N.G.I.N. EGO System",
@@ -7,15 +19,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="cs">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Share+Tech+Mono&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="cs" className={`${orbitron.variable} ${shareTechMono.variable}`}>
       <body className="app-root">{children}</body>
     </html>
   );

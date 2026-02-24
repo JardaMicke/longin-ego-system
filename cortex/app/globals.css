@@ -17,7 +17,7 @@
 
 body.app-root {
   margin: 0;
-  font-family: "Share Tech Mono", "Orbitron", system-ui, sans-serif;
+  font-family: var(--font-mono), var(--font-orbitron), system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
 }
@@ -46,7 +46,7 @@ body.app-root {
 
 .app-title {
   margin: 0;
-  font-family: "Orbitron", system-ui, sans-serif;
+  font-family: var(--font-orbitron), system-ui, sans-serif;
   font-size: 28px;
   color: var(--accent);
   letter-spacing: 2px;
@@ -77,7 +77,7 @@ body.app-root {
 }
 
 .panel-title {
-  font-family: "Orbitron", system-ui, sans-serif;
+  font-family: var(--font-orbitron), system-ui, sans-serif;
   font-size: 14px;
   letter-spacing: 1px;
   color: var(--accent);
