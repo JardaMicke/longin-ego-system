@@ -3,7 +3,8 @@ FROM node:20-alpine AS build
 WORKDIR /app/cortex
 
 COPY cortex/package.json /app/cortex/package.json
-RUN npm install
+COPY cortex/package-lock.json /app/cortex/package-lock.json
+RUN npm ci
 
 COPY cortex /app/cortex
 RUN npm run build

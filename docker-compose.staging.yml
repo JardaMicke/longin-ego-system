@@ -2,7 +2,7 @@ services:
   postgres:
     environment:
       POSTGRES_DB: longin_ego_staging
-  nexus-kernel:
+  ganglion-api:
     environment:
       LONGIN_ENV: staging
       STAGING_REDIS_URL: redis://redis:6379/0

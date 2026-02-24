@@ -20,28 +20,31 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - longin-net
-  nexus-kernel:
-    image: python:3.12-slim
-    working_dir: /app
-    volumes:
-      - ./:/app
+  ganglion-api:
+    image: longin-ego/ganglion:dev
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ganglion
     environment:
+      LONGIN_ENV: dev
       REDIS_URL: redis://redis:6379/0
       POSTGRES_DSN: postgresql://longin:longin@postgres:5432/longin_ego
-    command: ["python", "-c", "import time; time.sleep(10**9)"]
+    ports:
+      - "8000:8000"
     depends_on:
       - redis
       - postgres
     networks:
       - longin-net
   cortex-ui:
-    image: node:20-alpine
-    working_dir: /app/cortex
-    volumes:
-      - ./:/app
+    image: longin-ego/cortex:dev
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.cortex
     environment:
+      NODE_ENV: production
+      LONGIN_ENV: dev
       POSTGRES_DSN: postgresql://longin:longin@postgres:5432/longin_ego
-    command: ["sh", "-c", "npm install && npm run dev"]
     ports:
       - "3000:3000"
     depends_on:

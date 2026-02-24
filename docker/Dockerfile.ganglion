@@ -5,6 +5,7 @@ WORKDIR /app
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
 
+COPY pyproject.toml /app/pyproject.toml
 COPY requirements.txt /app/requirements.txt
 COPY ganglion /app/ganglion
 COPY kernel /app/kernel
@@ -14,7 +15,7 @@ COPY workers /app/workers
 COPY migrations /app/migrations
 COPY seeds /app/seeds
 
-RUN python -m pip install --upgrade pip && python -m pip install -r /app/requirements.txt
+RUN python -m pip install --upgrade pip && python -m pip install .
 
 EXPOSE 8000
 
