@@ -1,0 +1,47 @@
+# Advanced Scanner - Computer Vision Dependencies
+# LONGIN EGO System
+
+# Core Computer Vision
+opencv-python>=4.8.0
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# Machine Learning & AI
+torch>=2.0.0
+torchvision>=0.15.0
+scikit-learn>=1.3.0
+scikit-image>=0.21.0
+
+# OCR (Optical Character Recognition)
+easyocr>=1.7.0
+
+# Screenshot Capture
+pyautogui>=0.9.54
+
+# Windows specific (optional)
+pywin32>=306; sys_platform == "win32"
+
+# Linux specific (optional)
+scrot>=0.8; sys_platform == "linux"
+
+# System monitoring
+psutil>=5.9.0
+
+# Async support
+asyncio-mqtt>=0.13.0
+
+# Redis integration
+redis>=4.6.0
+redis-async>=1.0.0
+
+# Metrics and monitoring
+prometheus-client>=0.17.0
+
+# Development and testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+
+# Utilities
+python-dateutil>=2.8.0
+pathlib2>=2.3.0; python_version < "3.4"

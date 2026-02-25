@@ -32,7 +32,8 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 ### 2.5 Global Arbiter (Resource Management)
 
 - Snímání RAM a GPU teploty je v [core.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/arbiter/core.py#L1-L63).
-- Chronos sentinel využívá Arbiter pro blokaci akcí při nedostatku zdrojů.
+- **GPU Scheduler:** Implementace Single-GPU-Lock s prioritní frontou v [gpu_scheduler.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/arbiter/gpu_scheduler.py).
+- **Memory Optimizer:** Agresivní správa paměti v [memory_optimizer.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/arbiter/memory_optimizer.py).
 
 ### 2.6 Bikamerální paměť (Redis + Postgres)
 
@@ -47,14 +48,13 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - Soul soubor je v [soul.md](file:///f:/L.O.N.G.I.N.%20EGO%20System/ego/soul.md).
 - Boot loader identity parsuje direktivy a ukládá je do Redis/Postgres v [identity_boot.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/security/identity_boot.py#L1-L92).
 - Kernel runtime spouští boot identity při startu v [runtime.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/runtime.py#L42-L164).
-- Deník: [Page-1](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-1.md).
 
 ### 2.8 Bezpečnostní vrstva (Airlock + Sibling Containers)
 
 - AST validace zakázaných importů a whitelistu modulů je v [airlock.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/security/airlock.py#L1-L55).
 - Spouštění izolovaných kontejnerů je v [container_manager.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/security/container_manager.py).
 - Sibling runner pro spouštění skriptů v kontejnerech je v [runner.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/execution/runner.py).
-- Lokální Ganglion exekuce příkazů (sandbox i raw) je v [execution.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/ganglion/execution.py).
+- **Authentication:** JWT + RBAC v [auth_middleware.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/security/auth_middleware.py).
 
 ### 2.9 Síťová topologie (Nexus + Ganglia)
 
@@ -74,12 +74,18 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 
 - LangGraph workflow a ERTDSD orchestrátor jsou v [ertdsd_graph.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/orchestration/ertdsd_graph.py#L1-L157).
 - Registrace ERTDSD sentinelů probíhá v [runtime.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/runtime.py#L151-L169).
+- **Fáze:** [meeting_phase.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/orchestration/meeting_phase.py), [architect_phase.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/orchestration/architect_phase.py), [grind_phase.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/orchestration/grind_phase.py), [presentation_phase.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/orchestration/presentation_phase.py).
 
-### 2.12 Cortex UI (Next.js + Puck)
+### 2.12 Kognice a Vnímání
+
+- **Idle Dreaming:** [idle_dreaming.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/cognition/idle_dreaming.py) - kognitivní konsolidace.
+- **Advanced Scanner:** [advanced_scanner.py](file:///f:/L.O.N.G.I.N.%20EGO%20System/kernel/scanner/advanced_scanner.py) - CV a OCR.
+
+### 2.13 Cortex UI (Next.js + Puck)
 
 - UI aplikace a Puck editor jsou v [page.jsx](file:///f:/L.O.N.G.I.N.%20EGO%20System/cortex/app/page.jsx#L1-L63).
-- REST API pro layout persistence je v [route.js](file:///f:/L.O.N.G.I.N.%20EGO%20System/cortex/app/api/puck/route.js#L1-L38).
-- Datový layer pro verzované layouty je v [db.js](file:///f:/L.O.N.G.I.N.%20EGO%20System/cortex/lib/db.js#L1-L76).
+- **3D Vizualizace:** [SystemVisualization.jsx](file:///f:/L.O.N.G.I.N.%20EGO%20System/cortex/app/components/SystemVisualization.jsx).
+- **Tutorial:** [TutorialOverlay.jsx](file:///f:/L.O.N.G.I.N.%20EGO%20System/cortex/app/components/tutorial/TutorialOverlay.jsx).
 
 ## 3. Stav implementace vůči návrhu
 
@@ -94,42 +100,16 @@ Tento dokument mapuje klíčové architektonické prvky popsané v návrhu Longi
 - LangGraph orchestrátor ERTDSD a sentinel registrace.
 - Cortex UI (Next.js + Puck) s perzistencí layoutů.
 - Integrační a safety testy pro boot identity a SiblingRunner.
-- Docstringy tříd dle standardu.
-- Identity boot validace a auditní log v Postgres.
-- Retenční a vyhledávací politika audit logu.
-- API pro auditní log a systémovou telemetrii.
-- Správa secrets a konfigurační profilování pro prostředí.
-- DB migrace a seedovací data pro test/produkci.
-- Servisní metriky, logování a healthchecks.
-- Staging konfigurace a smoke testy.
-- CI/CD pipeline pro build, testy a image.
-- Docker image a release artefakty.
-- Produkční nasazení a ověření dostupnosti.
-- Deník: [Page-1](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-1.md).
-- Deník: [Page-2](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-2.md).
-- Deník: [Page-3](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-3.md).
-- Deník: [Page-4](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-4.md).
-- Deník: [Page-5](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-5.md).
-- Deník: [Page-6](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-6.md).
-- Deník: [Page-7](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-7.md).
-- Deník: [Page-8](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-8.md).
-- Deník: [Page-9](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-9.md).
-- Deník: [Page-10](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-10.md).
-- Deník: [Page-11](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-11.md).
-- Deník: [Page-12](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-12.md).
-- Deník: [Page-13](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-13.md).
-- Deník: [Page-14](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-14.md).
-- Deník: [Page-15](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-15.md).
-- Deník: [Page-16](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-16.md).
-- Deník: [Page-17](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-17.md).
-- Deník: [Page-18](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-18.md).
-- Deník: [Page-19](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-19.md).
-- Deník: [Page-20](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-20.md).
-- Deník: [Page-21](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-21.md).
-- Deník: [Page-22](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-22.md).
-- Deník: [Page-23](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-23.md).
-- Deník: [Page-24](file:///f:/L.O.N.G.I.N.%20EGO%20System/Diary/Page-24.md).
-  
+- **Nové moduly v8.0:**
+  - Kompletní ERTDSD pipeline (Meeting -> Architect -> Grind -> Presentation).
+  - Idle Dreaming System (multimind deliberation).
+  - Advanced Scanner (Computer Vision fallback).
+  - Single-GPU-Lock a Memory Optimizer.
+  - JWT Authentication + RBAC.
+  - Prometheus/Grafana Monitoring.
+  - 3D System Visualization.
+  - Produkční deployment konfigurace.
+
 ### 3.2 Chybějící části dle specifikace
 
 - Mobilní Synapse klient a vzdálené ovládací rozhraní nejsou součástí tohoto repo.

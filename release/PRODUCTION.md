@@ -11,11 +11,11 @@ powershell -ExecutionPolicy Bypass -File .\scripts\deploy_prod.ps1
 DNS:
 
 - A záznam pro longinegosystem.eu na IP produkčního serveru
-- A záznam pro www.longinegosystem.eu na IP produkčního serveru
+- A záznam pro [www.longinegosystem.eu](http://www.longinegosystem.eu) na IP produkčního serveru
 
 Reverse proxy:
 
-- Caddy obsluhuje www.longinegosystem.eu a přesměrovává longinegosystem.eu na www
+- Caddy obsluhuje <www.longinegosystem.eu> a přesměrovává longinegosystem.eu na www
 
 ## CI/CD
 
@@ -37,5 +37,5 @@ powershell -ExecutionPolicy Bypass -File .\scripts\check_prod.ps1
 
 Proměnné prostředí:
 
-- LONGIN_API_BASE (výchozí http://localhost:8000)
-- LONGIN_UI_BASE (výchozí http://localhost:3000)
+- LONGIN_API_BASE (výchozí <http://localhost:8000>)
+- LONGIN_UI_BASE (výchozí <http://localhost:3000>)

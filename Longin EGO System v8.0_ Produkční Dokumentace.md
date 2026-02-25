@@ -1,8 +1,8 @@
 # **Longin EGO System v8.0: Kompletní Produkční Dokumentace**
 
-**Verze:** 8.0 (Hive Mind Edition)
+**Verze:** 8.1 (Sovereign Digital Organism Edition)
 
-**Status:** Ready for Implementation
+**Status:** Implemented & Deployed
 
 **Autor:** LONGIN (Logical Orchestrated Networked Generative Intelligent Nexus)
 
@@ -40,6 +40,7 @@ Kernel je implementován v **Pythonu** a je řízen událostmi (Event-Driven).
 * **Komunikační páteř:** **Redis Streams**. Zajišťuje asynchronní komunikaci mezi moduly. Využíváme *Consumer Groups* pro škálování workerů.1  
 * **Sentinel Pattern:** Pro úsporu paměti neběží těžké knihovny neustále. Lehké procesy (Sentinely) monitorují streamy a dynamicky importují ("materializují") těžké moduly (např. pandas, transformers) pouze při potřebě zpracování zprávy. Po dokončení jsou moduly agresivně uvolněny.  
 * **Orchestrace (ERTDSD):** Logika autonomního vývoje je řízena pomocí **LangGraph**. Graf definuje stavy (Meeting \-\> Spec \-\> Code \-\> Test \-\> Deploy).
+* **Idle Dreaming System:** Kognitivní proces na pozadí, který analyzuje proběhlé interakce, optimalizuje paměť (MADS algoritmus) a navrhuje vylepšení během nečinnosti systému.
 
 ### **2.2 Datová a Paměťová Vrstva (Limbic System)**
 
@@ -57,6 +58,8 @@ Uživatelské rozhraní slouží jako "Mission Control".
 
 * **Technologie:** **Next.js 14+ (App Router)**.  
 * **Visual Editor:** Integrace **@measured/puck**. Uživatel netvoří UI kódem, ale skládá bloky. EGO může samo generovat konfiguraci pro Puck a tím dynamicky měnit svůj dashboard podle aktuální úlohy (např. zobrazit terminál při debugování).3  
+* **3D Visualization:** Interaktivní Three.js model systému zobrazující stav uzlů a tok dat v reálném čase.
+* **Live Telemetry:** Panel zobrazující aktuální vytížení CPU, RAM, GPU a teploty.
 * **Režimy:**  
   * *Conversation Mode:* Chat s widgety (schvalování, terminál).  
   * *Edit Mode:* Úprava rozložení dashboardu pomocí Pucku. Data se ukládají do Postgresu.
@@ -68,6 +71,13 @@ Autonomní spouštění kódu vyžaduje nekompromisní izolaci.
 * **Sibling Containers:** Kernel nespouští kód v sobě. Instruuje Docker daemona, aby spustil *nový* kontejner (sibling) vedle sebe.  
 * **Omezení zdrojů:** Každý sandbox má tvrdé limity: mem\_limit="512m", network\_mode="none" (pro testy), cpu\_quota.4  
 * **AST Security Scanner:** Před spuštěním je Python kód analyzován na úrovni abstraktního syntaktického stromu (AST). Zakázané importy (např. os.system mimo povolený kontext) způsobí zamítnutí exekuce.5
+* **Authentication:** JWT Tokeny + RBAC (Role-Based Access Control) pro zabezpečení API endpointů.
+
+### **2.5 Vnímání a Hardware Control**
+
+* **Advanced Scanner:** Modul pro počítačové vidění (OpenCV, YOLO, EasyOCR) umožňující systému "vidět" obrazovku a detekovat změny v UI aplikací.
+* **Single-GPU-Lock:** Arbitr zajišťující exkluzivní přístup k GPU (RTX 3060) pro kritické úlohy, aby nedošlo k OOM chybám.
+* **Memory Optimizer:** "Křemíková disciplína" - agresivní správa paměti pro udržení systému pod 32GB RAM.
 
 ## ---
 
@@ -101,65 +111,21 @@ Tato metodika definuje, jak Longin pracuje. Není to "Chat \-\> Odpověď", ale 
 
 ## ---
 
-**4\. Vývojářský Implementační Plán (Step-by-Step)**
+**4\. Nasazení a Provoz (Deployment)**
 
-Tento plán obsahuje odkazy na GitHub repozitáře, které použijeme jako *referenční implementace* (studijní materiál).
+Systém je navržen pro běh v Docker kontejnerech s orchestrací přes Docker Compose.
 
-### **Fáze A: Infrastruktura a Síť (The Nervous System)**
+### **4.1 Produkční Stack**
+* **Frontend:** Next.js (Node.js 18-alpine)
+* **Backend:** FastAPI (Python 3.11-slim)
+* **Database:** PostgreSQL 15 + pgvector
+* **Cache/Broker:** Redis 7
+* **Monitoring:** Prometheus + Grafana
+* **Proxy:** Nginx (SSL termination via Let's Encrypt)
 
-**Cíl:** Zprovoznit komunikaci mezi stroji a základní databázovou vrstvu.
-
-1. **Krok A.1: Docker Compose Stack**  
-   * *Úkol:* Definovat služby: redis (alpine), postgres (pgvector image), nexus-kernel (Python), cortex-ui (Node).  
-   * *Konfigurace:* Nastavit persistentní volumes pro Postgres a Redis data.  
-2. **Krok A.2: Discovery Service (mDNS)**  
-   * *Úkol:* Implementovat discovery.py běžící na Nexusu i Gangliích. Musí vysílat "Jsem tady, mám GPU" a naslouchat "Kdo je tady?".  
-   * *Referenční Repo:* **python-zeroconf/python-zeroconf** \- Pro čistou implementaci mDNS v Pythonu.  
-3. **Krok A.3: Ganglion Client**  
-   * *Úkol:* Vytvořit lehkou službu (FastAPI), která běží na klientech a přijímá příkazy (CMD\_EXEC, CMD\_LOAD\_MODEL).  
-   * *Referenční Repo:* **ahodieb/PySimpleRPC** \- Pro inspiraci, jak implementovat jednoduché vzdálené volání funkcí.
-
-### **Fáze B: Jádro a Paměť (The Brain)**
-
-**Cíl:** Zprovoznit myšlení a paměť.
-
-4. **Krok B.1: Sentinel & Redis Loop**  
-   * *Úkol:* Napsat kernel.py, který se připojí k Redis Streamu, čte zprávy a podle "tagů" rozhoduje, který modul načíst.  
-   * *Referenční Repo:* **redis-developer/redis-streams-hotel-jobs** \- Výborný příklad asynchronního zpracování streamů v Pythonu.  
-5. **Krok B.2: Integrace Paměti (Mem0)**  
-   * *Úkol:* Implementovat třídu MemoryManager, která obaluje mem0ai. Nastavit pgvector jako backend.  
-   * *Referenční Repo:* **mem0ai/mem0** 6 \- Oficiální implementace, kterou upravíme pro naše schéma.  
-6. **Krok B.3: Tool Server (FastMCP)**  
-   * *Úkol:* Vytvořit interní API pro nástroje (čtení souborů, hledání v DB) pomocí protokolu MCP.  
-   * *Referenční Repo:* **jlowin/fastmcp** 7 \- Pro vytvoření MCP serveru v Pythonu pomocí dekorátorů.
-
-### **Fáze C: ERTDSD a Sandbox (The Hands)**
-
-**Cíl:** Naučit systém bezpečně programovat.
-
-7. **Krok C.1: Sibling Container Runner**  
-   * *Úkol:* Implementovat třídu Sandbox, která používá docker-py k spouštění dočasných kontejnerů. Musí podporovat mountování pracovního adresáře.  
-   * *Referenční Repo:* **All-Hands-AI/OpenDevin** (modul sandbox) 8 \- Zlatý standard pro bezpečné spouštění kódu agenty.  
-8. **Krok C.2: AST Scanner**  
-   * *Úkol:* Vytvořit security.py, který parsuje kód před spuštěním a hledá zakázané uzly (AST nodes).  
-   * *Referenční Repo:* **PyCQA/bandit** \- Pro pochopení, jak procházet AST a hledat zranitelnosti.  
-9. **Krok C.3: Orchestrace (LangGraph)**  
-   * *Úkol:* Definovat stavový graf pro ERTDSD smyčku (uzly: Architect, Coder, Tester).  
-   * *Referenční Repo:* **langchain-ai/langgraph** (examples/supervisor) \- Vzor pro hierarchické řízení agentů.
-
-### **Fáze D: Frontend Cortex (The Face)**
-
-**Cíl:** Vizuální rozhraní pro spolupráci.
-
-10. **Krok D.1: Next.js \+ Puck Setup**  
-    * *Úkol:* Inicializovat Next.js projekt a integrovat editor Puck.  
-    * *Referenční Repo:* **puckeditor/puck** (recipe nextjs) 9 \- Oficiální příklad integrace.  
-11. **Krok D.2: Dynamic Component Generation**  
-    * *Úkol:* Vytvořit API endpoint, kam Kernel pošle JSON definici UI, a Cortex ji vykreslí.  
-    * *Inspirace:* Systém v0.dev nebo Generative UI od Vercelu, ale implementovaný lokálně pomocí Puck komponent.  
-12. **Krok D.3: Persistence UI**  
-    * *Úkol:* Implementovat ukládání puck.data do PostgreSQL (JSONB sloupec) místo do souboru.  
-    * *Referenční Repo:* **richardhightower/jsonb-postgresql** \- Best practices pro práci s JSONB v Postgresu.
+### **4.2 Hosting**
+* **Doména:** `www.longinegesystem.eu`
+* **Infrastruktura:** VPS nebo Hybridní režim (VPS Proxy -> Home GPU Server).
 
 ## ---
 

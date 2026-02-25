@@ -3,10 +3,12 @@
 ## Krok 6 – Doplnit docstringy u tříd podle standardu
 
 ### Zadání
+
 - Krok plánu: 6
 - Úkol: Doplnit docstringy u tříd podle standardu
 
 ### Změny
+
 - ganglion/api.py: L15, L26 – Přidány docstringy pro SpawnRequest a SpawnResponse.
 - ganglion/execution.py: L13, L23, L60 – Přidány docstringy pro ExecutionResult, SandboxExecutor a LocalExecutor.
 - workers/_sentinels/memory_pipeline_sentinel.py: L13, L26 – Přidány docstringy pro MemoryPipelineConfig a MemoryPipelineSentinel.
