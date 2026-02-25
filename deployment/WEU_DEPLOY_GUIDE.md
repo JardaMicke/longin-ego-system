@@ -93,21 +93,61 @@ EMAIL=admin@longinegesystem.eu
 docker compose -f deployment/docker-compose.prod.yml up -d --build
 ```
 
-## 4. Nastavení SSL (HTTPS)
+## 4. Nastavení SSL (HTTPS) - Let's Encrypt (Certbot)
 
-Při prvním spuštění je potřeba získat SSL certifikát od Let's Encrypt. Nginx kontejner bude zpočátku selhávat, protože chybí certifikáty.
+Pro zabezpečení komunikace (HTTPS) využijeme **Let's Encrypt**, který poskytuje důvěryhodné certifikáty zdarma. Pro validaci a instalaci použijeme nástroj **Certbot** v Dockeru, který je již předpřipraven v konfiguraci.
 
-1. Spusťte dočasný certbot příkaz:
+### Proč Let's Encrypt?
 
-```bash
-docker compose -f deployment/docker-compose.prod.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot -d longinegesystem.eu -d www.longinegesystem.eu
-```
+- **Zdarma:** Žádné poplatky za vydání ani obnovu.
+- **Automatizované:** Certbot se stará o validaci a obnovu.
+- **Důvěryhodné:** Podporováno všemi moderními prohlížeči.
+- **Bezpečné:** Moderní šifrování.
 
-1. Restartujte Nginx pro načtení certifikátů:
+### Postup instalace certifikátů
 
-```bash
-docker compose -f deployment/docker-compose.prod.yml restart nginx
-```
+1. **Ověřte DNS a Porty:**
+    - Ujistěte se, že doména `longinegesystem.eu` (A záznam) správně směřuje na IP adresu vašeho serveru.
+    - Ujistěte se, že na firewallu serveru (nebo u poskytovatele VPS) jsou otevřené porty **80** (HTTP) a **443** (HTTPS).
+
+2. **Spusťte Certbot (Dry Run - Test):**
+    Nejprve zkuste "testovací" běh, abyste se ujistili, že vše funguje, aniž byste vyčerpali limity Let's Encrypt.
+
+    ```bash
+    docker compose -f deployment/docker-compose.prod.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot --dry-run -d longinegesystem.eu -d www.longinegesystem.eu
+    ```
+
+    Pokud tento příkaz skončí úspěšně ("The dry run was successful"), pokračujte.
+
+3. **Vygenerujte ostrý certifikát:**
+
+    ```bash
+    docker compose -f deployment/docker-compose.prod.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot --email admin@longinegesystem.eu --agree-tos --no-eff-email -d longinegesystem.eu -d www.longinegesystem.eu
+    ```
+
+    - Tento příkaz vygeneruje soubory `fullchain.pem` a `privkey.pem` do složky `./certbot/conf/live/longinegesystem.eu/`.
+
+4. **Restartujte Nginx:**
+    Nginx nyní potřebuje načíst nově vytvořené certifikáty.
+
+    ```bash
+    docker compose -f deployment/docker-compose.prod.yml restart nginx
+    ```
+
+### Automatická obnova (Auto-Renewal)
+
+Certifikáty Let's Encrypt platí 90 dní. Náš Docker setup již obsahuje kontejner `certbot`, který běží na pozadí a každých 12 hodin kontroluje, zda je potřeba certifikát obnovit.
+
+- **Jak to funguje:** Kontejner `certbot` periodicky spouští `certbot renew`. Pokud je certifikát blízko expirace (méně než 30 dní), automaticky se obnoví.
+- **Reload Nginx:** Po obnově je třeba, aby Nginx načetl nový certifikát. To je v produkčním prostředí řešeno sdíleným volume nebo restart scriptem. Pro jednoduchost můžete nastavit cron job na hostitelském systému:
+
+  ```bash
+  # Otevřít crontab
+  crontab -e
+  
+  # Přidat řádek (restartuje Nginx každé pondělí ve 3:00 ráno pro načtení případných nových certifikátů)
+  0 3 * * 1 docker compose -f /opt/longin-ego/deployment/docker-compose.prod.yml restart nginx
+  ```
 
 ## 5. Ověření Funkčnosti
 
