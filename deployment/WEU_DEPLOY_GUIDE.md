@@ -48,11 +48,23 @@ sudo systemctl restart docker
 1. Přihlaste se do administrace Webglobe (<https://admin.webglobe.cz/>).
 2. Přejděte do správy domén a vyberte `longinegesystem.eu`.
 3. Otevřete **DNS Záznamy**.
-4. Zjistěte IP adresu vašeho serveru (VPS):
-   - **Kde ji najdu?** IP adresu naleznete v e-mailu o zřízení služby od Webglobe nebo v zákaznické administraci v sekci VPS / Servery -> Detail služby.
-   - Bude ve formátu např.: `89.123.45.67`.
+4. Zjistěte **Veřejnou IPv4 adresu** vašeho stroje (Host):
 
-5. Vytvořte/Upravte následující **A záznamy** (místo `<VAŠE_IP_ADRESA_VPS>` doplňte skutečnou IP adresu vašeho serveru):
+   **A) Pokud máte VPS (např. u Webglobe):**
+   - IP adresu naleznete v **e-mailu o zřízení služby** nebo v **administraci hostingu** (sekce VPS/Servery -> Detail).
+   - *Důležité:* Docker kontejner nemá vlastní veřejnou IP. Pro doménu se používá IP adresa celého serveru (VPS), na kterém Docker běží.
+
+   **B) Pokud hostujete doma (na vlastním PC/Serveru):**
+   - Pokud jste již připojeni k terminálu, zjistíte ji příkazem:
+
+     ```bash
+     curl ifconfig.me
+     ```
+
+   - Nebo otevřete v prohlížeči stránku [whatismyip.com](https://www.whatismyip.com/).
+   - *Pozor:* Pro domácí hosting musíte mít od poskytovatele internetu přidělenou **veřejnou IP adresu** a na routeru nastavené přesměrování portů (Port Forwarding) 80 a 443 na váš počítač.
+
+5. Vytvořte/Upravte následující **A záznamy** (místo `<VAŠE_IP_ADRESA_VPS>` doplňte zjištěnou veřejnou IP):
 
 | Typ | Název (Host) | Hodnota (Cíl) | TTL |
 |---|---|---|---|
